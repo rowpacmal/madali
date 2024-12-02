@@ -51,6 +51,46 @@ contract Madali {
     }
 
     // Modifiers
+    modifier isAdmin() {
+        if (msg.sender != admin) {
+            revert CustomError_AccessDenied(msg.sender, false);
+        }
+        _;
+    }
+
+    modifier isNotLocked() {
+        if (userLocked[msg.sender]) {
+            revert CustomError_AccessLocked(msg.sender, true);
+        }
+        userLocked[msg.sender] = true;
+        _;
+        userLocked[msg.sender] = false;
+    }
+
+    modifier isNotPaused() {
+        if (paused) {
+            revert CustomError_ContractPaused(true);
+        }
+        _;
+    }
+
+    modifier isStudent() {
+        if (
+            !students[msg.sender].exist &&
+            !teachers[msg.sender].exist &&
+            msg.sender != admin
+        ) {
+            revert CustomError_AccessDenied(msg.sender, false);
+        }
+        _;
+    }
+
+    modifier isTeacher() {
+        if (!teachers[msg.sender].exist && msg.sender != admin) {
+            revert CustomError_AccessDenied(msg.sender, false);
+        }
+        _;
+    }
 
     // Functions
 }

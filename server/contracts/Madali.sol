@@ -41,6 +41,9 @@ contract Madali {
     // Events
 
     // Errors
+    error CustomError_AccessDenied(address caller, bool access);
+    error CustomError_AccessLocked(address caller, bool locked);
+    error CustomError_ContractPaused(bool paused);
 
     // Constructor
     constructor() {

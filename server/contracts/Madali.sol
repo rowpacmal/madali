@@ -29,8 +29,14 @@ contract Madali {
 
     // Variables
     address public admin;
+    bool private paused;
 
     // Mappings
+    mapping(uint256 => Class) public classes;
+    mapping(uint256 => Course) public courses;
+    mapping(address => Student) public students;
+    mapping(address => Teacher) public teachers;
+    mapping(address => bool) public userLocked;
 
     // Events
 

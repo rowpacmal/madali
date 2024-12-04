@@ -4,8 +4,6 @@ pragma solidity ^0.8.27;
 import "./BaseContract.sol";
 
 contract ClassManagement is BaseContract {
-    constructor() {}
-
     /** Class Management Functions */
     function addClass(
         uint256 _classID

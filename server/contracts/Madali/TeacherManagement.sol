@@ -4,8 +4,6 @@ pragma solidity ^0.8.27;
 import "./BaseContract.sol";
 
 contract TeacherManagement is BaseContract {
-    constructor() {}
-
     /** Teacher Management Functions */
     function addTeacher(
         address _teacherAddress,

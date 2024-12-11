@@ -6,12 +6,8 @@ import "./interfaces/IStudentManagement.sol";
 import "./interfaces/ITeacherManagement.sol";
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract GradingSystem is AccessControl, ERC721 {
-    /** Usings */
-    using Counters for Counters.Counter;
-
     /** Enums */
     enum UserRole {
         Admin,
@@ -40,8 +36,8 @@ contract GradingSystem is AccessControl, ERC721 {
     }
 
     /** State Variables */
-    Counters.Counter private gradeIDCounter;
-    Counters.Counter private certificateIDCounter;
+    uint256 private gradeIDCounter;
+    uint256 private certificateIDCounter;
     IStudentManagement private studentContract;
     ITeacherManagement private teacherContract;
     mapping(uint256 => Certificate) private certificates;
@@ -170,8 +166,8 @@ contract GradingSystem is AccessControl, ERC721 {
                 continue;
             }
 
-            uint256 _gradeID = gradeIDCounter.current();
-            gradeIDCounter.increment();
+            uint256 _gradeID = gradeIDCounter;
+            ++gradeIDCounter;
 
             grades[_gradeID] = Grade({
                 student: _studentAddress,
@@ -243,8 +239,8 @@ contract GradingSystem is AccessControl, ERC721 {
         validAddress(_to)
         requireAssignedGrade(_gradeID)
     {
-        uint256 _certificateID = certificateIDCounter.current();
-        certificateIDCounter.increment();
+        uint256 _certificateID = certificateIDCounter;
+        ++certificateIDCounter;
 
         _mint(_to, _certificateID);
 

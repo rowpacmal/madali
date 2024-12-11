@@ -24,29 +24,9 @@ contract Factory is AccessControl {
         studentContract.updateTeacherContract(address(teacherContract));
         teacherContract.updateStudentContract(address(studentContract));
 
-        // Emit events
-        emit StudentContractDeployed(address(studentContract));
-        emit TeacherContractDeployed(address(teacherContract));
-    }
-
-    /** Functions */
-    // Allow owner to update or re-link contracts
-    function updateContracts(
-        address _newStudentContract,
-        address _newTeacherContract
-    )
-        external
-        onlyOwner
-        validAddress(_newStudentContract)
-        validAddress(_newTeacherContract)
-    {
-        // Deploy dependent contracts
-        studentContract = StudentManagement(_newStudentContract);
-        teacherContract = TeacherManagement(_newTeacherContract);
-
-        // Link contracts with each other
-        studentContract.updateTeacherContract(address(teacherContract));
-        teacherContract.updateStudentContract(address(studentContract));
+        // Set owner
+        studentContract.transferOwnership(owner());
+        teacherContract.transferOwnership(owner());
 
         // Emit events
         emit StudentContractDeployed(address(studentContract));

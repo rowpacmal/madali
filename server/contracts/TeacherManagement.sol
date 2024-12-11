@@ -21,7 +21,7 @@ contract TeacherManagement is AccessControl {
     }
 
     /** State Variables */
-    IStudentManagement private studentContract;
+    IStudentManagement public studentContract;
     address[] private teacherKeys;
     mapping(address => uint256[]) private courseID;
     mapping(uint256 => uint256) private courseIndex;

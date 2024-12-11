@@ -18,7 +18,7 @@ contract StudentManagement is AccessControl {
     }
 
     /** State Variables */
-    ITeacherManagement private teacherContract;
+    ITeacherManagement public teacherContract;
     uint16[] private classID;
     mapping(uint16 => Class) private classes;
     mapping(uint16 => uint256) private classIndex;

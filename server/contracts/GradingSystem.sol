@@ -36,10 +36,10 @@ contract GradingSystem is AccessControl, ERC721 {
     }
 
     /** State Variables */
+    IStudentManagement public studentContract;
+    ITeacherManagement public teacherContract;
     uint256 private gradeIDCounter;
     uint256 private certificateIDCounter;
-    IStudentManagement private studentContract;
-    ITeacherManagement private teacherContract;
     mapping(uint256 => Certificate) private certificates;
     mapping(address => uint256[]) private gradeID;
     mapping(uint256 => uint256) private gradeIndex;

@@ -71,4 +71,11 @@ abstract contract AccessControl is Ownable {
     function isPaused() external view virtual returns (bool) {
         return paused;
     }
+
+    /** Test Functions */
+    function reentryTest() external virtual whenNotPaused whenNotLocked {
+        reentryCall();
+    }
+
+    function reentryCall() internal virtual whenNotPaused whenNotLocked {}
 }

@@ -233,6 +233,7 @@ contract TeacherManagement is AccessControl {
         whenNotPaused
         whenNotLocked
         validAddress(_teacherAddress)
+        requireAssignedTeacher(_teacherAddress)
     {
         Teacher storage _teacherToUpdate = teachers[_teacherAddress];
         _teacherToUpdate.class = _newClassID;

@@ -32,6 +32,7 @@ contract TeacherManagement is AccessControl {
     /** Events */
     event CourseAdditionFailed_AlreadyExists(uint256 indexed course);
     event CourseDeleted(uint256 indexed course);
+    event CourseDeletionFailed_NoCoursesToDelete();
     event CourseDeletionFailed_NotFound(uint256 indexed course);
     event CourseDeletionFailed_NotOwned(uint256 indexed course);
     event CourseRegistered(uint256 indexed course);
@@ -167,7 +168,11 @@ contract TeacherManagement is AccessControl {
 
             delete teacherIndex[_teacherAddress];
 
-            batchDeleteCourses(courseID[_teacherAddress], _teacherAddress);
+            if (courseID[_teacherAddress].length == 0) {
+                emit CourseDeletionFailed_NoCoursesToDelete();
+            } else {
+                batchDeleteCourses(courseID[_teacherAddress], _teacherAddress);
+            }
 
             emit TeacherDeleted(_teacherAddress);
         }
@@ -245,6 +250,14 @@ contract TeacherManagement is AccessControl {
         validAddress(_teacherAddress)
         requireAssignedTeacher(_teacherAddress)
     {
+        if (_courses.length == 0) {
+            revert NoCoursesProvided();
+        }
+
+        if (courseID[_teacherAddress].length == 0) {
+            revert NoCoursesToDelete();
+        }
+
         batchDeleteCourses(_courses, _teacherAddress);
     }
 
@@ -364,14 +377,6 @@ contract TeacherManagement is AccessControl {
         uint256[] memory _courses,
         address _teacherAddress
     ) private validAddress(_teacherAddress) {
-        if (_courses.length == 0) {
-            revert NoCoursesProvided();
-        }
-
-        if (courseID[_teacherAddress].length == 0) {
-            revert NoCoursesToDelete();
-        }
-
         for (uint256 i = 0; i < _courses.length; ++i) {
             uint256 _courseID = _courses[i];
 

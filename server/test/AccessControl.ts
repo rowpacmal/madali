@@ -136,5 +136,44 @@ describe('Access Control Functionality', function () {
     });
   });
 
-  // describe('Ownable by @openzeppelin Functionality', function () {});
+  describe('Ownable by @openzeppelin Functionality', function () {
+    it('should initialize with the correct owner', async function () {
+      // Verify that the contract is owned by the owner.
+      expect(await factory.owner()).to.equal(owner.address);
+    });
+
+    it('should transfer ownership to another account', async function () {
+      // Transfer ownership to another account.
+      await factory.transferOwnership(user1.address);
+
+      // Verify that the contract is owned by the new owner.
+      expect(await factory.owner()).to.equal(user1.address);
+    });
+
+    it('should renounce ownership to the zero address', async function () {
+      const zeroAddress = '0x0000000000000000000000000000000000000000';
+
+      // Renounce ownership to the zero address.
+      await factory.renounceOwnership();
+
+      // Verify that the contract is owned by the zero address.
+      expect(await factory.owner()).to.equal(zeroAddress);
+    });
+
+    it('should revert when trying to transfer ownership to the zero address', async function () {
+      const zeroAddress = '0x0000000000000000000000000000000000000000';
+
+      // Attempt to transfer ownership to the zero address.
+      await expect(factory.transferOwnership(zeroAddress))
+        .to.be.revertedWithCustomError(factory, 'OwnableInvalidOwner')
+        .withArgs(zeroAddress);
+    });
+
+    it('should emit when transferring ownership', async function () {
+      // Transfer ownership to another account.
+      await expect(factory.transferOwnership(user1.address))
+        .to.be.emit(factory, 'OwnershipTransferred')
+        .withArgs(owner.address, user1.address);
+    });
+  });
 });

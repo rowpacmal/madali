@@ -159,11 +159,11 @@ contract TeacherManagement is AccessControl {
 
             delete teachers[_teacherAddress];
 
-            address _lastStudentKey = teacherKeys[teacherKeys.length - 1];
+            address _lastTeacherKey = teacherKeys[teacherKeys.length - 1];
             uint256 _teacherIndex = teacherIndex[_teacherAddress];
 
-            teacherIndex[_lastStudentKey] = _teacherIndex;
-            teacherKeys[_teacherIndex] = _lastStudentKey;
+            teacherIndex[_lastTeacherKey] = _teacherIndex;
+            teacherKeys[_teacherIndex] = _lastTeacherKey;
             teacherKeys.pop();
 
             delete teacherIndex[_teacherAddress];
@@ -218,7 +218,7 @@ contract TeacherManagement is AccessControl {
             });
 
             teacherKeys.push(_teacherAddress);
-            teacherIndex[_teacherAddress] = teacherKeys.length;
+            teacherIndex[_teacherAddress] = teacherKeys.length - 1;
 
             emit TeacherRegistered(_teacherAddress);
         }
@@ -307,8 +307,7 @@ contract TeacherManagement is AccessControl {
                 modules: _modules[i]
             });
 
-            courseID[_teacherAddress].push(_courseID);
-            courseIndex[_courseID] = courseID[_teacherAddress].length;
+            addCourseToTeacher(_teacherAddress, _courseID);
 
             emit CourseRegistered(_courseID);
         }
@@ -373,6 +372,14 @@ contract TeacherManagement is AccessControl {
     }
 
     /** Utility Functions */
+    function addCourseToTeacher(
+        address _teacherAddress,
+        uint256 _courseID
+    ) private {
+        courseID[_teacherAddress].push(_courseID);
+        courseIndex[_courseID] = courseID[_teacherAddress].length - 1;
+    }
+
     function batchDeleteCourses(
         uint256[] memory _courses,
         address _teacherAddress

@@ -7,23 +7,21 @@ describe('Teacher Management Functionality', function () {
 
   let teacherManagement: TeacherManagement;
   let owner: any, user1: any, user2: any, user3: any, user4: any, user5: any;
+  let teachers: string[];
 
   beforeEach(async function () {
+    // Use the deployContractFixture function to deploy the contract.
     ({ owner, user1, user2, user3, user4, user5, teacherManagement } =
       await deployContractFixture());
+
+    // Create an array of teacher addresses.
+    teachers = [user1.address, user2.address, user3.address];
+
+    // Check the initial total number of teachers is 0.
+    expect(await teacherManagement.getTotalTeachers()).to.equal(0);
   });
 
   describe('Teacher CRUD Functionality', function () {
-    let teachers: string[];
-
-    beforeEach(async function () {
-      // Create an array of teacher addresses.
-      teachers = [user1.address, user2.address, user3.address];
-
-      // Check the initial total number of teachers is 0.
-      expect(await teacherManagement.getTotalTeachers()).to.equal(0);
-    });
-
     describe('Registering Teachers', function () {
       it('should verify registered teachers have been stored correctly', async function () {
         // Register new teachers.
@@ -199,7 +197,267 @@ describe('Teacher Management Functionality', function () {
       });
     });
 
-    describe('Updating Teacher', function () {});
+    describe('Updating Teacher', function () {
+      beforeEach(async function () {
+        // Register a new teacher.
+        await teacherManagement.registerTeachers(teachers, [1, 2, 3]);
+
+        // Check that a teacher has been registered.
+        expect(await teacherManagement.getTotalTeachers()).to.equal(3);
+      });
+
+      it('should update teacher details correctly', async function () {
+        // Update the teacher details.
+        await teacherManagement.updateTeacher(user1.address, 2);
+
+        // Check the teacher details have been updated.
+        const teacher: Teacher = await teacherManagement.getTeacher(
+          user1.address
+        );
+        const teacherRef: Teacher = [[user1.address, BigInt(2), true], []];
+
+        expect(teacher[0][0]).to.equal(teacherRef[0][0]);
+        expect(teacher[0][1]).to.equal(teacherRef[0][1]);
+        expect(teacher[0][2]).to.equal(teacherRef[0][2]);
+      });
+
+      it('should revert when updating a teacher when not the owner', async function () {
+        // Update the teacher details as a non-owner user.
+        await expect(
+          teacherManagement.connect(user4).updateTeacher(user1.address, 2)
+        )
+          .to.be.revertedWithCustomError(
+            teacherManagement,
+            'UnauthorizedAccount'
+          )
+          .withArgs(user4.address);
+      });
+
+      it('should revert when updating another teachers details', async function () {
+        // Update another teachers details.
+        await expect(
+          teacherManagement.connect(user2).updateTeacher(user1.address, 2)
+        )
+          .to.be.revertedWithCustomError(
+            teacherManagement,
+            'UnauthorizedAccount'
+          )
+          .withArgs(user2.address);
+      });
+
+      it('should revert when updating a teacher with a zero address', async function () {
+        const zeroAddress = '0x0000000000000000000000000000000000000000';
+
+        // Update a teacher with a zero address.
+        await expect(
+          teacherManagement.updateTeacher(zeroAddress, 2)
+        ).to.be.revertedWithCustomError(
+          teacherManagement,
+          'ZeroAddressNotAllowed'
+        );
+      });
+
+      it('should revert when updating a teacher that does not exist', async function () {
+        // Update a teacher that does not exist.
+        await expect(teacherManagement.updateTeacher(user4.address, 2))
+          .to.be.revertedWithCustomError(teacherManagement, 'TeacherNotFound')
+          .withArgs(user4.address);
+      });
+    });
+  });
+
+  describe('Course CRUD Functionality', function () {
+    beforeEach(async function () {
+      // Register a new teachers.
+      await teacherManagement.registerTeachers(teachers, [1, 2, 3]);
+
+      // Check that 3 teachers have been registered.
+      expect(await teacherManagement.getTotalTeachers()).to.equal(3);
+    });
+
+    describe('Registering Courses', function () {
+      let courses: number[], classes: number[], modules: number[];
+
+      beforeEach(async function () {
+        // Check that no courses have been registered.
+        expect(
+          await teacherManagement.getTotalCoursesByTeacher(teachers[0])
+        ).to.equal(0);
+
+        // Register courses for a teacher.
+        courses = [1, 2, 3];
+        classes = [1, 2, 3];
+        modules = [5, 5, 5];
+      });
+
+      it('should register courses for a teacher correctly', async function () {
+        // Register courses for a teacher.
+        await teacherManagement.registerCourse(
+          teachers[0],
+          courses,
+          classes,
+          modules
+        );
+
+        // Check that 3 courses have been registered.
+        expect(
+          await teacherManagement.getTotalCoursesByTeacher(teachers[0])
+        ).to.equal(3);
+
+        // Check that the courses have been registered.
+        const allCourses = await teacherManagement.getAllCoursesByTeacher(
+          teachers[0]
+        );
+        const course1 = await teacherManagement.getCourse(allCourses[0]);
+        const course2 = await teacherManagement.getCourse(allCourses[1]);
+        const course3 = await teacherManagement.getCourse(allCourses[2]);
+
+        expect(course1[1]).to.equal(courses[0]);
+        expect(course1[2]).to.equal(classes[0]);
+        expect(course1[3]).to.equal(modules[0]);
+
+        expect(course2[1]).to.equal(courses[1]);
+        expect(course2[2]).to.equal(classes[1]);
+        expect(course2[3]).to.equal(modules[1]);
+
+        expect(course3[1]).to.equal(courses[2]);
+        expect(course3[2]).to.equal(classes[2]);
+        expect(course3[3]).to.equal(modules[2]);
+      });
+
+      it('should revert when registering courses as a non-owner or non-teacher user', async function () {
+        // Attempt to register courses as a non-owner or non-teacher user.
+        await expect(
+          teacherManagement
+            .connect(user4)
+            .registerCourse(teachers[0], courses, classes, modules)
+        )
+          .to.be.revertedWithCustomError(
+            teacherManagement,
+            'UnauthorizedAccount'
+          )
+          .withArgs(user4.address);
+
+        // Attempt to register courses as the owner.
+        await expect(
+          teacherManagement.registerCourse(teachers[1], [4], [4], [5])
+        ).to.not.be.revertedWithCustomError(
+          teacherManagement,
+          'UnauthorizedAccount'
+        );
+
+        // Attempt to register courses as a teacher.
+        await expect(
+          teacherManagement
+            .connect(user1)
+            .registerCourse(teachers[2], [4], [4], [5])
+        ).to.not.be.revertedWithCustomError(
+          teacherManagement,
+          'UnauthorizedAccount'
+        );
+      });
+
+      it('should revert when registering a courses to a teacher with a zero address', async function () {
+        const zeroAddress = '0x0000000000000000000000000000000000000000';
+
+        // Attempt to register a courses to a teacher with a zero address.
+        await expect(
+          teacherManagement.registerCourse(zeroAddress, [4], [4], [5])
+        ).to.be.revertedWithCustomError(
+          teacherManagement,
+          'ZeroAddressNotAllowed'
+        );
+      });
+
+      it('should revert when registering a course to a teacher that does not exist', async function () {
+        // Attempt to register a course to a teacher that does not exist.
+        await expect(
+          teacherManagement.registerCourse(user4.address, [4], [4], [5])
+        )
+          .to.be.revertedWithCustomError(teacherManagement, 'TeacherNotFound')
+          .withArgs(user4.address);
+      });
+
+      it('should revert when registering a course with no courses, classes, or modules', async function () {
+        // Attempt to register a course with no courses.
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [], [1], [5])
+        ).to.be.revertedWithCustomError(teacherManagement, 'NoCoursesProvided');
+
+        // Attempt to register a course with no classes.
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [1], [], [5])
+        ).to.be.revertedWithCustomError(teacherManagement, 'NoClassesProvided');
+
+        // Attempt to register a course with no modules.
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [1], [1], [])
+        ).to.be.revertedWithCustomError(teacherManagement, 'NoModulesProvided');
+      });
+
+      it('should revert when registering a course with mismatching lengths of courses, classes, and modules', async function () {
+        // Attempt to register a course with mismatching lengths of courses, classes, and modules.
+        // 2 courses, 1 class, 1 module
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [1, 2], [1], [5])
+        )
+          .to.be.revertedWithCustomError(
+            teacherManagement,
+            'CoursesClassesModulesLengthMismatch'
+          )
+          .withArgs(2, 1, 1);
+
+        // 1 course, 2 classes, 1 module
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [1], [1, 2], [5])
+        )
+          .to.be.revertedWithCustomError(
+            teacherManagement,
+            'CoursesClassesModulesLengthMismatch'
+          )
+          .withArgs(1, 2, 1);
+
+        // 1 course, 1 class, 2 modules
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [1], [1], [5, 5])
+        )
+          .to.be.revertedWithCustomError(
+            teacherManagement,
+            'CoursesClassesModulesLengthMismatch'
+          )
+          .withArgs(1, 1, 2);
+      });
+
+      it('should emit when registering the same course twice', async function () {
+        // Register a new course.
+        await teacherManagement.registerCourse(teachers[0], [1], [1], [5]);
+
+        // Attempt to register the same course again.
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [1], [2], [7])
+        )
+          .to.be.emit(teacherManagement, 'CourseAdditionFailed_AlreadyExists')
+          .withArgs(1);
+
+        // Attempt to register the same course twice
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [2, 2], [2, 3], [7, 7])
+        )
+          .to.be.emit(teacherManagement, 'CourseAdditionFailed_AlreadyExists')
+          .withArgs(2);
+      });
+
+      it('should emit when registering a course', async function () {
+        // Register a new course.
+        await expect(
+          teacherManagement.registerCourse(teachers[0], [1], [1], [5])
+        )
+          .to.emit(teacherManagement, 'CourseRegistered')
+          .withArgs(1);
+      });
+    });
+
+    describe('Deleting Courses', function () {});
   });
 
   describe('', function () {

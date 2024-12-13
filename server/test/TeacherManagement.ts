@@ -572,7 +572,67 @@ describe('Teacher Management Functionality', function () {
     });
   });
 
-  describe('', function () {
-    it('', async function () {});
+  describe('Interface Utility Functions Functionality', function () {
+    let courses: number[], classes: number[], modules: number[];
+
+    beforeEach(async function () {
+      // Register a new teachers.
+      await teacherManagement.registerTeachers(teachers, [1, 2, 3]);
+
+      // Check that 3 teachers have been registered.
+      expect(await teacherManagement.getTotalTeachers()).to.equal(3);
+
+      // Check that no courses have been registered.
+      expect(
+        await teacherManagement.getTotalCoursesByTeacher(teachers[0])
+      ).to.equal(0);
+
+      // Register courses for a teacher.
+      courses = [1, 2, 3];
+      classes = [1, 2, 3];
+      modules = [5, 5, 5];
+
+      // Register courses for a teacher.
+      await teacherManagement.registerCourse(
+        teachers[0],
+        courses,
+        classes,
+        modules
+      );
+
+      // Check that 3 courses have been registered.
+      expect(
+        await teacherManagement.getTotalCoursesByTeacher(teachers[0])
+      ).to.equal(3);
+    });
+
+    it('should check if a course is registered', async function () {
+      // Check if a course is registered.
+      expect(await teacherManagement.doesCourseExist(1)).to.be.true;
+
+      // Check if a course is not registered.
+      expect(await teacherManagement.doesCourseExist(4)).to.be.false;
+    });
+
+    it('should check if a teacher is registered', async function () {
+      // Check if a teacher is registered.
+      expect(await teacherManagement.doesTeacherExist(teachers[0])).to.be.true;
+
+      // Check if a teacher is not registered.
+      expect(await teacherManagement.doesTeacherExist(user4.address)).to.be
+        .false;
+    });
+
+    it('should get the address of a teacher from a course', async function () {
+      // Get the address of a teacher from a course.
+      expect(await teacherManagement.getCourseTeacher(1)).to.equal(teachers[0]);
+    });
+
+    it('should revert when getting the address of a teacher from a course that does not exist', async function () {
+      // Get the address of a teacher from a course that does not exist.
+      await expect(teacherManagement.getCourseTeacher(4))
+        .to.be.revertedWithCustomError(teacherManagement, 'CourseNotFound')
+        .withArgs(4);
+    });
   });
 });

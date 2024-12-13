@@ -6,12 +6,12 @@ describe('Teacher Management Functionality', function () {
   type Teacher = [[string, BigInt, boolean], BigInt[]];
 
   let teacherManagement: TeacherManagement;
-  let user1: any, user2: any, user3: any, user4: any, user5: any;
+  let user1: any, user2: any, user3: any, user4: any;
   let teachers: string[];
 
   beforeEach(async function () {
     // Use the deployContractFixture function to deploy the contract.
-    ({ user1, user2, user3, user4, user5, teacherManagement } =
+    ({ user1, user2, user3, user4, teacherManagement } =
       await deployContractFixture());
 
     // Create an array of teacher addresses.

@@ -39,14 +39,17 @@ contract StudentManagement is AccessControl {
         address indexed student,
         uint16 indexed classID
     );
+    event StudentDeletionFailed_NoStudentsToDelete();
     event StudentDeletionFailed_ZeroAddress();
     event StudentRegistered(address indexed student);
+    event StudentUpdated(address indexed student);
 
     /** Errors */
     error NoClassesProvided();
     error NoClassesToDelete();
     error NoStudentsProvided();
     error NoStudentsToDelete();
+    error StudentNotFound(address student);
     error TeacherContractNotFound();
     error UnauthorizedAccount(address caller);
 
@@ -104,6 +107,10 @@ contract StudentManagement is AccessControl {
         whenNotLocked
         provideStudents(_students)
     {
+        if (studentKeys[_classID].length == 0) {
+            revert NoStudentsToDelete();
+        }
+
         batchDeleteStudents(_students, _classID);
     }
 
@@ -139,7 +146,7 @@ contract StudentManagement is AccessControl {
             });
 
             studentKeys[_classID].push(_studentAddress);
-            studentIndex[_studentAddress] = studentKeys[_classID].length;
+            studentIndex[_studentAddress] = studentKeys[_classID].length - 1;
 
             emit StudentRegistered(_studentAddress);
         }
@@ -147,6 +154,7 @@ contract StudentManagement is AccessControl {
 
     function updateStudent(
         address _studentAddress,
+        uint16 _oldClassID,
         uint16 _newClassID
     )
         external
@@ -155,8 +163,25 @@ contract StudentManagement is AccessControl {
         whenNotLocked
         validAddress(_studentAddress)
     {
-        Student storage _studentToUpdate = students[_studentAddress];
-        _studentToUpdate.class = _newClassID;
+        if (!students[_studentAddress].exists) {
+            revert StudentNotFound(_studentAddress);
+        }
+
+        students[_studentAddress].class = _newClassID;
+
+        address _lastStudentKey = studentKeys[_oldClassID][
+            studentKeys[_oldClassID].length - 1
+        ];
+        uint256 _studentIndex = studentIndex[_studentAddress];
+
+        studentIndex[_lastStudentKey] = _studentIndex;
+        studentKeys[_oldClassID][_studentIndex] = _lastStudentKey;
+        studentKeys[_oldClassID].pop();
+
+        studentKeys[_newClassID].push(_studentAddress);
+        studentIndex[_studentAddress] = studentKeys[_newClassID].length - 1;
+
+        emit StudentUpdated(_studentAddress);
     }
 
     // Class
@@ -177,13 +202,13 @@ contract StudentManagement is AccessControl {
             _newClass.exists = true;
 
             classID.push(_classID);
-            classIndex[_classID] = classID.length;
+            classIndex[_classID] = classID.length - 1;
 
             emit ClassCreated(_classID);
         }
     }
 
-    function deleteClass(
+    function deleteClasses(
         uint16[] memory _classes
     ) external onlyOwner whenNotPaused whenNotLocked provideClasses(_classes) {
         if (classID.length == 0) {
@@ -213,7 +238,11 @@ contract StudentManagement is AccessControl {
             delete classIndex[_classID];
 
             // Delete all student data from the class.
-            batchDeleteStudents(studentKeys[_classID], _classID);
+            if (studentKeys[_classID].length == 0) {
+                emit StudentDeletionFailed_NoStudentsToDelete();
+            } else {
+                batchDeleteStudents(studentKeys[_classID], _classID);
+            }
 
             delete studentKeys[_classID];
 
@@ -265,11 +294,7 @@ contract StudentManagement is AccessControl {
     function batchDeleteStudents(
         address[] memory _students,
         uint16 _classID
-    ) private provideStudents(_students) {
-        if (studentKeys[_classID].length == 0) {
-            revert NoStudentsToDelete();
-        }
-
+    ) private {
         for (uint256 i = 0; i < _students.length; ++i) {
             address _studentAddress = _students[i];
 

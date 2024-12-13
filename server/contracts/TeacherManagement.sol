@@ -439,7 +439,7 @@ contract TeacherManagement is AccessControl {
         uint256 _courseID
     ) external view returns (address) {
         if (!courses[_courseID].exists) {
-            revert();
+            revert CourseNotFound(_courseID);
         }
 
         return courses[_courseID].teacher;

@@ -384,7 +384,7 @@ contract TeacherManagement is AccessControl {
     function batchDeleteCourses(
         uint256[] memory _courses,
         address _teacherAddress
-    ) private validAddress(_teacherAddress) {
+    ) private {
         for (uint256 i = 0; i < _courses.length; ++i) {
             uint256 _courseID = _courses[i];
 

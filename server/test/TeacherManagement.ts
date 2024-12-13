@@ -267,29 +267,27 @@ describe('Teacher Management Functionality', function () {
   });
 
   describe('Course CRUD Functionality', function () {
+    let courses: number[], classes: number[], modules: number[];
+
     beforeEach(async function () {
       // Register a new teachers.
       await teacherManagement.registerTeachers(teachers, [1, 2, 3]);
 
       // Check that 3 teachers have been registered.
       expect(await teacherManagement.getTotalTeachers()).to.equal(3);
+
+      // Check that no courses have been registered.
+      expect(
+        await teacherManagement.getTotalCoursesByTeacher(teachers[0])
+      ).to.equal(0);
+
+      // Register courses for a teacher.
+      courses = [1, 2, 3];
+      classes = [1, 2, 3];
+      modules = [5, 5, 5];
     });
 
     describe('Registering Courses', function () {
-      let courses: number[], classes: number[], modules: number[];
-
-      beforeEach(async function () {
-        // Check that no courses have been registered.
-        expect(
-          await teacherManagement.getTotalCoursesByTeacher(teachers[0])
-        ).to.equal(0);
-
-        // Register courses for a teacher.
-        courses = [1, 2, 3];
-        classes = [1, 2, 3];
-        modules = [5, 5, 5];
-      });
-
       it('should register courses for a teacher correctly', async function () {
         // Register courses for a teacher.
         await teacherManagement.registerCourse(
@@ -304,7 +302,7 @@ describe('Teacher Management Functionality', function () {
           await teacherManagement.getTotalCoursesByTeacher(teachers[0])
         ).to.equal(3);
 
-        // Check that the courses have been registered.
+        // Check that the courses have been registered correctly.
         const allCourses = await teacherManagement.getAllCoursesByTeacher(
           teachers[0]
         );
@@ -457,7 +455,121 @@ describe('Teacher Management Functionality', function () {
       });
     });
 
-    describe('Deleting Courses', function () {});
+    describe('Deleting Courses', function () {
+      beforeEach(async function () {
+        // Register courses for a teacher.
+        await teacherManagement.registerCourse(
+          teachers[0],
+          courses,
+          classes,
+          modules
+        );
+
+        // Check that 3 courses have been registered.
+        expect(
+          await teacherManagement.getTotalCoursesByTeacher(teachers[0])
+        ).to.equal(3);
+      });
+
+      it('should delete courses form a teacher correctly', async function () {
+        // Delete 2 of the registered courses.
+        await teacherManagement.deleteCourses([1, 3], teachers[0]);
+
+        // Check that 1 course is left.
+        expect(
+          await teacherManagement.getTotalCoursesByTeacher(teachers[0])
+        ).to.equal(1);
+
+        // Check that the deleted courses no longer exist.
+        expect(
+          await teacherManagement.getAllCoursesByTeacher(teachers[0])
+        ).to.deep.equal([2]);
+      });
+
+      it('should revert when deleting courses as a non-owner or non-teacher user', async function () {
+        // Attempt to delete courses as a non-owner or non-teacher user.
+        await expect(
+          teacherManagement.connect(user4).deleteCourses([1, 3], teachers[0])
+        )
+          .to.be.revertedWithCustomError(
+            teacherManagement,
+            'UnauthorizedAccount'
+          )
+          .withArgs(user4.address);
+
+        // Attempt to delete courses as the owner.
+        await expect(
+          teacherManagement.deleteCourses([1, 3], teachers[1])
+        ).to.not.be.revertedWithCustomError(
+          teacherManagement,
+          'UnauthorizedAccount'
+        );
+
+        // Attempt to delete courses as a teacher.
+        await expect(
+          teacherManagement.connect(user1).deleteCourses([1, 3], teachers[2])
+        ).to.not.be.revertedWithCustomError(
+          teacherManagement,
+          'UnauthorizedAccount'
+        );
+      });
+
+      it('should revert when deleting a courses from a teacher with a zero address', async function () {
+        const zeroAddress = '0x0000000000000000000000000000000000000000';
+
+        // Attempt to delete a course from a teacher with a zero address.
+        await expect(
+          teacherManagement.deleteCourses([1, 3], zeroAddress)
+        ).to.be.revertedWithCustomError(
+          teacherManagement,
+          'ZeroAddressNotAllowed'
+        );
+      });
+
+      it('should revert when deleting a course from a teacher that does not exist', async function () {
+        // Attempt to delete a course from a teacher that does not exist.
+        await expect(teacherManagement.deleteCourses([1, 3], user4.address))
+          .to.be.revertedWithCustomError(teacherManagement, 'TeacherNotFound')
+          .withArgs(user4.address);
+      });
+
+      it('should revert when deleting with no courses provided and there are no registered courses', async function () {
+        // Delete with no courses provided.
+        await expect(
+          teacherManagement.deleteCourses([], teachers[0])
+        ).to.be.revertedWithCustomError(teacherManagement, 'NoCoursesProvided');
+
+        // Delete courses from a teacher with no registered courses.
+        await expect(
+          teacherManagement.deleteCourses([1, 2, 3], teachers[1])
+        ).to.be.revertedWithCustomError(teacherManagement, 'NoCoursesToDelete');
+      });
+
+      it('should emit when deleting a course that does not exist', async function () {
+        // Delete a course that does not exist.
+        await expect(teacherManagement.deleteCourses([4], teachers[0]))
+          .to.be.emit(teacherManagement, 'CourseDeletionFailed_NotFound')
+          .withArgs(4);
+      });
+
+      it('should emit when deleting a course from another teacher', async function () {
+        // Register a course for another teacher.
+        await teacherManagement.registerCourse(teachers[1], [4], [4], [5]);
+
+        // Delete a course from another teacher.
+        await expect(teacherManagement.deleteCourses([1], teachers[1]))
+          .to.be.emit(teacherManagement, 'CourseDeletionFailed_NotOwned')
+          .withArgs(1);
+      });
+
+      it('should emit when deleting a registered course', async function () {
+        // Delete 1 of the registered courses.
+        await expect(teacherManagement.deleteCourses([1], teachers[0])).to.emit(
+          teacherManagement,
+          'CourseDeleted'
+        );
+      });
+    });
   });
 
   describe('', function () {

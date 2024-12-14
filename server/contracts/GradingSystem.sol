@@ -7,7 +7,7 @@ import "./interfaces/ITeacherManagement.sol";
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract GradingSystem is AccessControl, ERC721 {
+contract GradingSystem is AccessControl {
     /** Enums */
     enum UserRole {
         Admin,
@@ -17,14 +17,6 @@ contract GradingSystem is AccessControl, ERC721 {
     }
 
     /** Structs */
-    struct Certificate {
-        address owner;
-        string imageURL;
-        uint256 grade;
-        uint256 id;
-        bool exists;
-    }
-
     struct Grade {
         address student;
         address teacher;
@@ -39,8 +31,6 @@ contract GradingSystem is AccessControl, ERC721 {
     IStudentManagement public studentContract;
     ITeacherManagement public teacherContract;
     uint256 private gradeIDCounter;
-    uint256 private certificateIDCounter;
-    mapping(uint256 => Certificate) private certificates;
     mapping(address => uint256[]) private gradeID;
     mapping(uint256 => uint256) private gradeIndex;
     mapping(uint256 => Grade) private grades;
@@ -50,7 +40,6 @@ contract GradingSystem is AccessControl, ERC721 {
     event GradeAdditionFailed_ZeroAddress();
 
     /** Errors */
-    error CertificateNotFound(uint256 certificate);
     error CourseNotFound(uint256 course);
     error GradeAlreadyAssigned(uint256 course, uint8 module);
     error GradeNotFound(uint256 grade);
@@ -66,8 +55,7 @@ contract GradingSystem is AccessControl, ERC721 {
     constructor(
         address _studentContractAddress,
         address _teacherContractAddress
-    ) ERC721("MadaliCertificate", "MDLC") {
-        // Set the initial StudentManagement and TeacherManagement address to 0
+    ) {
         studentContract = IStudentManagement(_studentContractAddress);
         teacherContract = ITeacherManagement(_teacherContractAddress);
     }
@@ -106,13 +94,6 @@ contract GradingSystem is AccessControl, ERC721 {
     modifier provideStudents(address[] memory _students) {
         if (_students.length == 0) {
             revert NoStudentsProvided();
-        }
-        _;
-    }
-
-    modifier requireAssignedCertificate(uint256 _certificateID) {
-        if (!certificates[_certificateID].exists) {
-            revert CertificateNotFound(_certificateID);
         }
         _;
     }
@@ -180,7 +161,7 @@ contract GradingSystem is AccessControl, ERC721 {
             });
 
             gradeID[_studentAddress].push(_gradeID);
-            gradeIndex[_gradeID] = gradeID[_studentAddress].length;
+            gradeIndex[_gradeID] = gradeID[_studentAddress].length - 1;
         }
     }
 
@@ -225,53 +206,6 @@ contract GradingSystem is AccessControl, ERC721 {
         _gradeToUpdate.grade = _newGrade;
     }
 
-    // Certificate
-    function mintCertificate(
-        address _to,
-        uint256 _gradeID,
-        uint256 _courseID,
-        string memory _imageURL
-    )
-        external
-        onlyAuthorizedTeacher(teacherContract.getCourseTeacher(_courseID))
-        whenNotPaused
-        whenNotLocked
-        validAddress(_to)
-        requireAssignedGrade(_gradeID)
-    {
-        uint256 _certificateID = certificateIDCounter;
-        ++certificateIDCounter;
-
-        _mint(_to, _certificateID);
-
-        // Store certificate metadata
-        certificates[_certificateID] = Certificate({
-            owner: _to,
-            imageURL: _imageURL,
-            grade: _gradeID,
-            id: _certificateID,
-            exists: true
-        });
-    }
-
-    function updateCertificate(
-        uint256 _certificateID,
-        address _newOwner,
-        string memory _newImageURL
-    )
-        external
-        onlyOwner
-        whenNotPaused
-        whenNotLocked
-        validAddress(_newOwner)
-        requireAssignedCertificate(_certificateID)
-    {
-        Certificate storage _certificateToUpdate = certificates[_certificateID];
-
-        _certificateToUpdate.owner = _newOwner;
-        _certificateToUpdate.imageURL = _newImageURL;
-    }
-
     /** Getter Functions */
     // Grade
     function getAllGradesByStudent(
@@ -309,18 +243,6 @@ contract GradingSystem is AccessControl, ERC721 {
         return gradeID[_studentAddress].length;
     }
 
-    // Certificate
-    function getCertificate(
-        uint256 _certificateID
-    )
-        external
-        view
-        requireAssignedCertificate(_certificateID)
-        returns (Certificate memory)
-    {
-        return certificates[_certificateID];
-    }
-
     // User Role
     function getUserRole() external view returns (UserRole) {
         UserRole _userRole;
@@ -350,5 +272,10 @@ contract GradingSystem is AccessControl, ERC721 {
     {
         studentContract = IStudentManagement(_newStudentContractAddress);
         teacherContract = ITeacherManagement(_newTeacherContractAddress);
+    }
+
+    /** Interface Functions */
+    function doesGradeExist(uint256 _gradeID) external view returns (bool) {
+        return grades[_gradeID].exists;
     }
 }

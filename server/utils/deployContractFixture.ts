@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import {
+  EducationCertificate,
   Factory,
   GradingSystem,
   StudentManagement,
@@ -48,14 +49,15 @@ export default async function deployContractFixture() {
   );
 
   // Deploy the Education Certification contract, passing the addresses of grading, student, and teacher contracts
-  const EducationCertification = await ethers.getContractFactory(
-    'EducationCertification'
+  const EducationCertificate = await ethers.getContractFactory(
+    'EducationCertificate'
   );
-  const educationCertification: any = await EducationCertification.deploy(
-    gradingSystem.getAddress(),
-    studentAddress,
-    teacherAddress
-  );
+  const educationCertificate: EducationCertificate =
+    await EducationCertificate.deploy(
+      gradingSystem.getAddress(),
+      studentAddress,
+      teacherAddress
+    );
 
   return {
     owner,
@@ -75,6 +77,6 @@ export default async function deployContractFixture() {
     studentManagement,
     teacherManagement,
     gradingSystem,
-    educationCertification,
+    educationCertificate,
   };
 }

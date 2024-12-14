@@ -26,9 +26,23 @@ const MadaliModule = buildModule('MadaliModule', (m) => {
     }
   );
 
+  // Deploy the EducationCertificate contract.
+  const educationCertificateContract = m.contract(
+    'EducationCertificate',
+    [
+      gradingSystemContract,
+      studentManagementContractAddress,
+      teacherManagementContractAddress,
+    ],
+    {
+      after: [gradingSystemContract], // Ensure it runs after the GradingSystem contract is deployed.
+    }
+  );
+
   return {
     factoryContract,
     gradingSystemContract,
+    educationCertificateContract,
   };
 });
 

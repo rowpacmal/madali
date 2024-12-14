@@ -34,6 +34,13 @@ contract GradingSystem is AccessControl {
     mapping(uint256 => Grade) private grades;
 
     /** Events */
+    event GradeAdded(address indexed student, uint256 indexed grade);
+    event GradeDeleted(address indexed student, uint256 indexed grade);
+    event GradeUpdated(
+        uint256 indexed grade,
+        uint8 indexed assignedGrade,
+        uint8 indexed newAssignedGrade
+    );
     event GradeAdditionFailed_StudentNotFound(address indexed student);
     event GradeAdditionFailed_ZeroAddress();
 
@@ -125,13 +132,8 @@ contract GradingSystem is AccessControl {
             );
         }
 
-        if (!teacherContract.doesCourseExist(_courseID)) {
-            revert CourseNotFound(_courseID);
-        }
-
         for (uint256 i; i < _students.length; ++i) {
             address _studentAddress = _students[i];
-            uint8 _studentGrade = _grades[i];
 
             if (_studentAddress == address(0)) {
                 emit GradeAdditionFailed_ZeroAddress();
@@ -154,12 +156,14 @@ contract GradingSystem is AccessControl {
                 course: _courseID,
                 id: _gradeID,
                 module: _module,
-                grade: _studentGrade,
+                grade: _grades[i],
                 exists: true
             });
 
             gradeID[_studentAddress].push(_gradeID);
             gradeIndex[_gradeID] = gradeID[_studentAddress].length - 1;
+
+            emit GradeAdded(_studentAddress, _gradeID);
         }
     }
 
@@ -172,36 +176,41 @@ contract GradingSystem is AccessControl {
         whenNotLocked
         requireAssignedGrade(_gradeID)
     {
-        Grade storage _gradeToDelete = grades[_gradeID];
+        address _studentAddress = grades[_gradeID].student;
 
         delete grades[_gradeID];
 
-        uint256 _lastGradeID = gradeID[_gradeToDelete.student][
-            gradeID[_gradeToDelete.student].length - 1
+        uint256 _lastGradeID = gradeID[_studentAddress][
+            gradeID[_studentAddress].length - 1
         ];
         uint256 _gradeIndex = gradeIndex[_gradeID];
 
         gradeIndex[_lastGradeID] = _gradeIndex;
-        gradeID[_gradeToDelete.student][_gradeIndex] = _lastGradeID;
-        gradeID[_gradeToDelete.student].pop();
+        gradeID[_studentAddress][_gradeIndex] = _lastGradeID;
+        gradeID[_studentAddress].pop();
 
         delete gradeIndex[_gradeID];
+
+        emit GradeDeleted(_studentAddress, _gradeID);
     }
 
     function updateGrade(
         uint256 _gradeID,
-        uint256 _courseID,
         uint8 _newGrade
     )
         external
-        onlyAuthorizedTeacher(teacherContract.getCourseTeacher(_courseID))
+        onlyAuthorizedTeacher(
+            teacherContract.getCourseTeacher(grades[_gradeID].course)
+        )
         whenNotPaused
         whenNotLocked
-        requireAssignedGrade(_gradeID)
     {
         Grade storage _gradeToUpdate = grades[_gradeID];
+        uint8 _oldGrade = _gradeToUpdate.grade;
 
         _gradeToUpdate.grade = _newGrade;
+
+        emit GradeUpdated(_gradeID, _oldGrade, _newGrade);
     }
 
     /** Getter Functions */
@@ -224,6 +233,7 @@ contract GradingSystem is AccessControl {
         external
         view
         onlyAuthorizedStudent(grades[_gradeID].student)
+        requireAssignedGrade(_gradeID)
         returns (Grade memory)
     {
         return grades[_gradeID];

@@ -32,7 +32,7 @@ contract EducationCertificate is AccessControl, ERC721 {
     error GradeNotFound(uint256 grade);
     error UnauthorizedAccount(address caller);
 
-    /** Contructor */
+    /** Constructor */
     constructor(
         address _gradingContractAddress,
         address _studentContractAddress,
@@ -126,5 +126,22 @@ contract EducationCertificate is AccessControl, ERC721 {
         returns (Certificate memory)
     {
         return certificates[_certificateID];
+    }
+
+    /** Injection Functions */
+    function updateStudentAndTeacherContracts(
+        address _newGradingContractAddress,
+        address _newStudentContractAddress,
+        address _newTeacherContractAddress
+    )
+        external
+        onlyOwner
+        validAddress(_newGradingContractAddress)
+        validAddress(_newStudentContractAddress)
+        validAddress(_newTeacherContractAddress)
+    {
+        gradingContract = IGradingSystem(_newGradingContractAddress);
+        studentContract = IStudentManagement(_newStudentContractAddress);
+        teacherContract = ITeacherManagement(_newTeacherContractAddress);
     }
 }

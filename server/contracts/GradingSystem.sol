@@ -5,8 +5,6 @@ import "./AccessControl.sol";
 import "./interfaces/IStudentManagement.sol";
 import "./interfaces/ITeacherManagement.sol";
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-
 contract GradingSystem is AccessControl {
     /** Enums */
     enum UserRole {

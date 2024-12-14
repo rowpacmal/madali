@@ -26,9 +26,12 @@ contract EducationCertificate is AccessControl, ERC721 {
     mapping(uint256 => Certificate) private certificates;
 
     /** Events */
+    event CertificateCreated(uint256 indexed certificate);
+    event CertificateUpdated(uint256 indexed certificate);
 
     /** Errors */
     error CertificateNotFound(uint256 certificate);
+    error CourseNotFound(uint256 course);
     error GradeNotFound(uint256 grade);
     error UnauthorizedAccount(address caller);
 
@@ -96,6 +99,8 @@ contract EducationCertificate is AccessControl, ERC721 {
             id: _certificateID,
             exists: true
         });
+
+        emit CertificateCreated(_certificateID);
     }
 
     function updateCertificate(
@@ -114,6 +119,8 @@ contract EducationCertificate is AccessControl, ERC721 {
 
         _certificateToUpdate.owner = _newOwner;
         _certificateToUpdate.imageURL = _newImageURL;
+
+        emit CertificateUpdated(_certificateID);
     }
 
     /** Getter Functions */
@@ -126,6 +133,10 @@ contract EducationCertificate is AccessControl, ERC721 {
         returns (Certificate memory)
     {
         return certificates[_certificateID];
+    }
+
+    function getTotalCertificates() external view returns (uint256) {
+        return certificateIDCounter;
     }
 
     /** Injection Functions */

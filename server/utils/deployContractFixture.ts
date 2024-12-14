@@ -8,7 +8,19 @@ import {
 
 export default async function deployContractFixture() {
   // Get signers
-  const [owner, user1, user2, user3, user4, user5] = await ethers.getSigners();
+  const [
+    owner,
+    user1,
+    user2,
+    user3,
+    user4,
+    user5,
+    user6,
+    user7,
+    user8,
+    user9,
+    user10,
+  ] = await ethers.getSigners();
 
   // Deploy the Factory contract
   const Factory = await ethers.getContractFactory('Factory');
@@ -35,6 +47,16 @@ export default async function deployContractFixture() {
     teacherAddress
   );
 
+  // Deploy the Education Certification contract, passing the addresses of grading, student, and teacher contracts
+  const EducationCertification = await ethers.getContractFactory(
+    'EducationCertification'
+  );
+  const educationCertification: any = await EducationCertification.deploy(
+    gradingSystem.getAddress(),
+    studentAddress,
+    teacherAddress
+  );
+
   return {
     owner,
     user1,
@@ -42,11 +64,17 @@ export default async function deployContractFixture() {
     user3,
     user4,
     user5,
+    user6,
+    user7,
+    user8,
+    user9,
+    user10,
     factory,
     studentAddress,
     teacherAddress,
     studentManagement,
     teacherManagement,
     gradingSystem,
+    educationCertification,
   };
 }

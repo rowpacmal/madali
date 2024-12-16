@@ -10,19 +10,34 @@ const MadaliModule = buildModule('MadaliModule', (m) => {
     'StudentContractDeployed',
     'studentContract'
   );
-
   const teacherManagementContractAddress = m.readEventArgument(
     factoryContract,
     'TeacherContractDeployed',
     'teacherContract'
   );
 
-  // Deploy GradingSystem, passing StudentManagement and TeacherManagement addresses.
-  const gradingSystemContract = m.contract(
-    'GradingSystem',
-    [studentManagementContractAddress, teacherManagementContractAddress],
+  // Create contract instances for StudentManagement and TeacherManagement
+  const studentManagementContract = m.contractAt(
+    'StudentManagement',
+    studentManagementContractAddress,
     {
       after: [factoryContract], // Ensure it runs after the Factory contract is deployed.
+    }
+  );
+  const teacherManagementContract = m.contractAt(
+    'TeacherManagement',
+    teacherManagementContractAddress,
+    {
+      after: [studentManagementContract], // Ensure it runs after the StudentManagement contract is deployed.
+    }
+  );
+
+  // Deploy the GradingSystem contract.
+  const gradingSystemContract = m.contract(
+    'GradingSystem',
+    [studentManagementContract, teacherManagementContract],
+    {
+      after: [teacherManagementContract], // Ensure it runs after the TeacherManagement contract is deployed.
     }
   );
 
@@ -31,8 +46,8 @@ const MadaliModule = buildModule('MadaliModule', (m) => {
     'EducationCertificate',
     [
       gradingSystemContract,
-      studentManagementContractAddress,
-      teacherManagementContractAddress,
+      studentManagementContract,
+      teacherManagementContract,
     ],
     {
       after: [gradingSystemContract], // Ensure it runs after the GradingSystem contract is deployed.
@@ -41,6 +56,8 @@ const MadaliModule = buildModule('MadaliModule', (m) => {
 
   return {
     factoryContract,
+    studentManagementContract,
+    teacherManagementContract,
     gradingSystemContract,
     educationCertificateContract,
   };

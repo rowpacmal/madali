@@ -8,10 +8,10 @@ import "./interfaces/ITeacherManagement.sol";
 contract GradingSystem is AccessControl {
     /** Enums */
     enum UserRole {
-        Admin,
-        Teacher,
+        Unauthorized,
         Student,
-        Unauthorized
+        Teacher,
+        Admin
     }
 
     /** Structs */

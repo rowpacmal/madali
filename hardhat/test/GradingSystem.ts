@@ -446,10 +446,10 @@ describe('Grading System Functionality', function () {
 
   describe('Check User Role Utility Functions Functionality', function () {
     enum UserRole {
-      Admin,
-      Teacher,
-      Student,
       Unauthorized,
+      Student,
+      Teacher,
+      Admin,
     }
 
     it('should check the user role correctly', async function () {

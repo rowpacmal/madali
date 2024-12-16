@@ -1,9 +1,9 @@
 import { createContext, useEffect, useState } from 'react';
-import initializeContract from '../utils/initializeContract';
-import educationCertificate from '../utils/educationCertificate.config';
-import gradingSystem from '../utils/gradingSystem.config';
-import studentManagement from '../utils/studentManagement.config';
-import teacherManagement from '../utils/teacherManagement.config';
+import initializeContract from '../../utils/initializeContract';
+import educationCertificate from '../../utils/educationCertificate.config';
+import gradingSystem from '../../utils/gradingSystem.config';
+import studentManagement from '../../utils/studentManagement.config';
+import teacherManagement from '../../utils/teacherManagement.config';
 
 const ContractContext = createContext({});
 

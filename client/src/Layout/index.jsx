@@ -1,6 +1,7 @@
 import { useContext } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { ContractContext } from '../contexts/ContractContext';
+import Navigation from '../components/Navigation';
 
 function Layout() {
   const { userRole, walletAddress } = useContext(ContractContext);
@@ -10,30 +11,19 @@ function Layout() {
       <header>
         <h1>Madali</h1>
 
-        <p>Role: {userRole}</p>
-        <p>User: {walletAddress}</p>
+        {userRole && <p>Role: {userRole}</p>}
+        {walletAddress && <p>Wallet: {walletAddress}</p>}
 
-        <nav>
-          <ul>
-            <li>
-              <NavLink to="/">Home</NavLink>
-            </li>
-            <li>
-              <NavLink to="/1">Link 1</NavLink>
-            </li>
-            <li>
-              <NavLink to="/2">Link 2</NavLink>
-            </li>
-            <li>
-              <NavLink to="/3">Link 3</NavLink>
-            </li>
-          </ul>
-        </nav>
+        <Navigation />
       </header>
 
       <main>
         <Outlet />
       </main>
+
+      <footer>
+        <p>&copy; Madali Education 2023</p>
+      </footer>
     </>
   );
 }

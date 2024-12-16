@@ -8,12 +8,13 @@ import { ethers } from 'ethers';
 const ContractContext = createContext({});
 
 function ContractProvider({ children }) {
+  const [userRole, setUserRole] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
+
   const [certificateContract, setCertificateContract] = useState(null);
   const [gradingContract, setGradingContract] = useState(null);
   const [studentContract, setStudentContract] = useState(null);
   const [teacherContract, setTeacherContract] = useState(null);
-  const [userRole, setUserRole] = useState('');
-  const [walletAddress, setWalletAddress] = useState('');
 
   useEffect(() => {
     (async function () {
@@ -42,19 +43,22 @@ function ContractProvider({ children }) {
     (async function () {
       const role = Number(await gradingContract.read.getUserRole());
 
+      console.log(role);
+
       switch (role) {
-        case 0:
+        case 3:
           setUserRole('Admin');
           break;
 
-        case 1:
+        case 2:
           setUserRole('Teacher');
           break;
 
-        case 2:
+        case 1:
           setUserRole('Student');
           break;
 
+        case 0:
         default:
           setUserRole('Unauthorized');
           break;
@@ -97,12 +101,12 @@ function ContractProvider({ children }) {
   return (
     <ContractContext.Provider
       value={{
+        userRole,
+        walletAddress,
         certificateContract,
         gradingContract,
         studentContract,
         teacherContract,
-        userRole,
-        walletAddress,
       }}
     >
       {children}

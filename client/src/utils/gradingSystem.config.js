@@ -418,7 +418,13 @@ const gradingSystem = {
       type: 'function',
     },
     {
-      inputs: [],
+      inputs: [
+        {
+          internalType: 'address',
+          name: '_userAddress',
+          type: 'address',
+        },
+      ],
       name: 'getUserRole',
       outputs: [
         {

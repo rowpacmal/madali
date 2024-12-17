@@ -1,7 +1,8 @@
-import { ethers } from 'ethers';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../contexts/AppContext';
 import gradingSystem from '../../utils/gradingSystem.config';
+import initializeContract from '../../utils/initializeContract';
+import handleCustomErrors from '../../utils/handleCustomErrors';
 
 function useGradingSystem() {
   const { account, provider, signer } = useContext(AppContext);
@@ -10,25 +11,7 @@ function useGradingSystem() {
 
   // Initialize the contract.
   useEffect(() => {
-    (async function () {
-      if (!window.ethereum || !provider || !signer) {
-        return;
-      }
-
-      const read = new ethers.Contract(
-        gradingSystem.address,
-        gradingSystem.abi,
-        provider
-      );
-
-      const write = new ethers.Contract(
-        gradingSystem.address,
-        gradingSystem.abi,
-        signer
-      );
-
-      setGradingContract({ read, write });
-    })();
+    initializeContract(gradingSystem, setGradingContract, provider, signer);
   }, [provider, signer]); // Depend on provider and signer.
 
   // Fetch user role when gradingContract or account changes.
@@ -41,7 +24,7 @@ function useGradingSystem() {
 
       try {
         // Ensure the userRole fetch is tied to the current signer/account.
-        const role = Number(await gradingContract.read.getUserRole());
+        const role = Number(await gradingContract.read.getUserRole(account));
         console.log('User role for account:', account, 'is:', role);
 
         switch (role) {
@@ -63,7 +46,7 @@ function useGradingSystem() {
             break;
         }
       } catch (error) {
-        console.error('Error getting user role:', error);
+        handleCustomErrors(gradingSystem.abi, error);
       }
     })();
   }, [gradingContract, account]); // Depend on gradingContract and account.

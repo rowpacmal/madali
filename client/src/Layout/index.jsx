@@ -1,10 +1,12 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { ContractContext } from '../contexts/ContractContext';
+import { AppContext } from '../contexts/AppContext';
 import Navigation from '../components/Navigation';
+import useGradingSystem from '../hooks/useGradingSystem';
 
 function Layout() {
-  const { userRole, walletAddress } = useContext(ContractContext);
+  const { account } = useContext(AppContext);
+  const { userRole } = useGradingSystem();
 
   return (
     <>
@@ -12,7 +14,7 @@ function Layout() {
         <h1>Madali</h1>
 
         {userRole && <p>Role: {userRole}</p>}
-        {walletAddress && <p>Wallet: {walletAddress}</p>}
+        {account && <p>Wallet: {account}</p>}
 
         <Navigation />
       </header>

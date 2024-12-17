@@ -453,19 +453,29 @@ describe('Grading System Functionality', function () {
     }
 
     it('should check the user role correctly', async function () {
+      const zeroAddress: string = '0x0000000000000000000000000000000000000000';
+
       // Check the user role.
-      expect(await gradingSystem.connect(owner).getUserRole()).to.equal(
-        UserRole.Admin
-      );
-      expect(await gradingSystem.connect(user1).getUserRole()).to.equal(
-        UserRole.Teacher
-      );
-      expect(await gradingSystem.connect(user4).getUserRole()).to.equal(
-        UserRole.Student
-      );
-      expect(await gradingSystem.connect(user8).getUserRole()).to.equal(
-        UserRole.Unauthorized
-      );
+      expect(
+        await gradingSystem.connect(owner).getUserRole(owner.address)
+      ).to.equal(UserRole.Admin);
+      expect(
+        await gradingSystem.connect(user1).getUserRole(user1.address)
+      ).to.equal(UserRole.Teacher);
+      expect(
+        await gradingSystem.connect(user4).getUserRole(user4.address)
+      ).to.equal(UserRole.Student);
+
+      // Check the user role as a non-student, non-teacher or non-owner.
+      expect(
+        await gradingSystem.connect(user8).getUserRole(zeroAddress)
+      ).to.equal(UserRole.Unauthorized);
+      expect(
+        await gradingSystem.connect(user8).getUserRole(user8.address)
+      ).to.equal(UserRole.Unauthorized);
+      expect(
+        await gradingSystem.connect(user8).getUserRole(owner.address)
+      ).to.equal(UserRole.Unauthorized);
     });
   });
 

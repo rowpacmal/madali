@@ -252,17 +252,29 @@ contract GradingSystem is AccessControl {
     }
 
     // User Role
-    function getUserRole() external view returns (UserRole) {
-        UserRole _userRole;
+    function getUserRole(
+        address _userAddress
+    ) external view returns (UserRole) {
+        UserRole _userRole = UserRole.Unauthorized;
+
+        if (_userAddress == address(0)) {
+            return _userRole;
+        }
+
+        if (_userAddress != msg.sender) {
+            return _userRole;
+        }
 
         if (owner() == msg.sender) {
             _userRole = UserRole.Admin;
-        } else if (teacherContract.doesTeacherExist(msg.sender)) {
+        }
+
+        if (teacherContract.doesTeacherExist(msg.sender)) {
             _userRole = UserRole.Teacher;
-        } else if (studentContract.doesStudentExist(msg.sender)) {
+        }
+
+        if (studentContract.doesStudentExist(msg.sender)) {
             _userRole = UserRole.Student;
-        } else {
-            _userRole = UserRole.Unauthorized;
         }
 
         return _userRole;

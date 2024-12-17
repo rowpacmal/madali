@@ -3,7 +3,7 @@ import teacherManagement from '../../utils/teacherManagement.config';
 import { AppContext } from '../../contexts/AppContext';
 import initializeContract from '../../utils/initializeContract';
 
-function TeacherManagement() {
+function useTeacherManagement() {
   const { provider, signer } = useContext(AppContext);
   const [teacherContract, setTeacherContract] = useState(null);
 
@@ -15,4 +15,4 @@ function TeacherManagement() {
   return { teacherContract };
 }
 
-export default TeacherManagement;
+export default useTeacherManagement;

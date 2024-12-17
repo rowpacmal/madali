@@ -254,15 +254,15 @@ contract GradingSystem is AccessControl {
     // User Role
     function getUserRole(
         address _userAddress
-    ) external view returns (UserRole) {
+    ) external view returns (address, UserRole) {
         UserRole _userRole = UserRole.Unauthorized;
 
         if (_userAddress == address(0)) {
-            return _userRole;
+            return (msg.sender, _userRole);
         }
 
         if (_userAddress != msg.sender) {
-            return _userRole;
+            return (msg.sender, _userRole);
         }
 
         if (owner() == msg.sender) {
@@ -277,7 +277,7 @@ contract GradingSystem is AccessControl {
             _userRole = UserRole.Student;
         }
 
-        return _userRole;
+        return (msg.sender, _userRole);
     }
 
     /** Injection Functions */

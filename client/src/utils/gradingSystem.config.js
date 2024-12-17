@@ -428,6 +428,11 @@ const gradingSystem = {
       name: 'getUserRole',
       outputs: [
         {
+          internalType: 'address',
+          name: '',
+          type: 'address',
+        },
+        {
           internalType: 'enum GradingSystem.UserRole',
           name: '',
           type: 'uint8',

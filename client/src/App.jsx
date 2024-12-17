@@ -6,7 +6,7 @@ import Router from './Router';
 import './styles/App.css';
 
 function App() {
-  const { setAccount, setProvider, setSigner } = useContext(AppContext);
+  /* const { setAccount, setProvider, setSigner } = useContext(AppContext);
 
   // Connect wallet on page load.
   useEffect(() => {
@@ -23,7 +23,7 @@ function App() {
       try {
         const newProvider = new ethers.BrowserProvider(window.ethereum);
         const accounts = await newProvider.send('eth_requestAccounts', []);
-        const newSigner = newProvider.getSigner();
+        const newSigner = await newProvider.getSigner();
 
         setProvider(newProvider);
         setSigner(newSigner);
@@ -61,7 +61,7 @@ function App() {
     } else {
       console.warn('MetaMask is not installed.');
     }
-  }, []);
+  }, []); */
 
   return <Router />;
 }

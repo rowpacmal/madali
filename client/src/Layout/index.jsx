@@ -42,15 +42,25 @@ function Layout() {
     try {
       console.log(
         await teacherContract.read.doesTeacherExist(
-          '0x70997970c51812dc3a010c7d01b50e0d17dc79c8'
+          '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
+          {
+            from: account,
+          }
         )
       );
       console.log(
         await teacherContract.read.getTeacher(
-          '0x70997970c51812dc3a010c7d01b50e0d17dc79c8'
+          '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
+          {
+            from: account,
+          }
         )
       );
-      console.log(await teacherContract.read.getAllTeachers());
+      console.log(
+        await teacherContract.read.getAllTeachers({
+          from: account,
+        })
+      );
     } catch (error) {
       setStatus(handleCustomError(teacherManagement.abi, error));
     }
@@ -58,7 +68,11 @@ function Layout() {
 
   async function handleGetStudents() {
     try {
-      console.log(await studentContract.read.getAllStudents(2401));
+      console.log(
+        await studentContract.read.getAllStudents(2401, {
+          from: account,
+        })
+      );
     } catch (error) {
       setStatus(handleCustomError(studentManagement.abi, error));
     }

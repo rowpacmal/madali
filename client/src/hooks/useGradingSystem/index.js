@@ -24,10 +24,16 @@ function useGradingSystem() {
 
       try {
         // Ensure the userRole fetch is tied to the current signer/account.
-        const role = Number(await gradingContract.read.getUserRole(account));
-        console.log('User role for account:', account, 'is:', role);
+        const role = await gradingContract.read.getUserRole(account, {
+          from: account,
+        });
+        // console.log('User role for account:', role[0], 'is:', role[1]);
 
-        switch (role) {
+        console.log('wallet:', account);
+        console.log('msg.sender:', role[0]);
+        console.log('role:', role[1]);
+
+        switch (Number(role[1])) {
           case 3:
             setUserRole('Admin');
             break;

@@ -8,15 +8,6 @@ function AppProvider({ children }) {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
 
-  // Connect wallet on page load.
-  useEffect(() => {
-    if (window.ethereum) {
-      connectWallet();
-    } else {
-      console.warn('MetaMask is not installed.');
-    }
-  }, []);
-
   // Function to connect wallet.
   const connectWallet = async () => {
     if (window.ethereum) {
@@ -39,6 +30,15 @@ function AppProvider({ children }) {
       console.warn('MetaMask is not installed.');
     }
   };
+
+  // Connect wallet on page load.
+  useEffect(() => {
+    if (window.ethereum) {
+      connectWallet();
+    } else {
+      console.warn('MetaMask is not installed.');
+    }
+  }, []);
 
   // Listener for account and network changes.
   useEffect(() => {
@@ -67,7 +67,15 @@ function AppProvider({ children }) {
 
   return (
     <AppContext.Provider
-      value={{ account, setAccount, provider, setProvider, signer, setSigner }}
+      value={{
+        account,
+        setAccount,
+        provider,
+        setProvider,
+        signer,
+        setSigner,
+        connectWallet,
+      }}
     >
       {children}
     </AppContext.Provider>

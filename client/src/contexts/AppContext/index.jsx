@@ -13,34 +13,39 @@ function AppProvider({ children }) {
   const [account, setAccount] = useState('');
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
+  const [isConnecting, setIsConnecting] = useState(false);
 
   // Function to connect wallet.
   const connectWallet = async () => {
     if (ethereum) {
+      setIsConnecting(true);
+
       try {
         const newProvider = new ethers.BrowserProvider(ethereum);
-        // const accounts = await newProvider.send('eth_requestAccounts', []);
+        const accounts = await newProvider.send('eth_requestAccounts', []);
         const newSigner = await newProvider.getSigner();
 
         setProvider(newProvider);
         setSigner(newSigner);
-        // setAccount(accounts[0]);
-        setAccount(newSigner.address);
+        setAccount(accounts[0]);
 
-        // console.info('Wallet connected:', accounts[0]);
-        console.info('Wallet connected:', newSigner.address);
+        console.info('Wallet connected:', accounts[0]);
       } catch (error) {
         console.error('Error connecting wallet:', error);
       }
+
+      setIsConnecting(false);
     } else {
       console.warn(warningMessage); // Handle case where web3 provider is not installed.
     }
   };
 
-  // Connect wallet on page load.
+  // Auto connect wallet on page load if wallet is already connected.
   useEffect(() => {
-    const autoConnectWallet = async () => {
+    (async () => {
       if (ethereum) {
+        setIsConnecting(true);
+
         try {
           // Check for connected accounts
           const accounts = await window.ethereum.request({
@@ -57,12 +62,12 @@ function AppProvider({ children }) {
         } catch (error) {
           console.error('Failed to auto-connect wallet:', error);
         }
+
+        setIsConnecting(false);
       } else {
         console.warn(warningMessage); // Handle case where web3 provider is not installed.
       }
-    };
-
-    autoConnectWallet();
+    })();
   }, []);
 
   // Listener for account and network changes.
@@ -102,6 +107,7 @@ function AppProvider({ children }) {
         setProvider,
         signer,
         setSigner,
+        isConnecting,
         connectWallet,
       }}
     >

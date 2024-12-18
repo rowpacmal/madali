@@ -1,17 +1,14 @@
-import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
-import { AppContext } from '../contexts/AppContext';
 import Navigation from '../components/Navigation';
+import ConnectWalletButton from '../components/ConnectWalletButton';
 
 function Layout() {
-  const { account } = useContext(AppContext);
-
   return (
     <>
       <header>
         <h1>Madali</h1>
 
-        {account && <p>Wallet: {account}</p>}
+        <ConnectWalletButton />
 
         <Navigation />
       </header>

@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router-dom';
+import useUserRole from '../../hooks/useUserRole';
 
-function Navigation({ userRole }) {
+function Navigation() {
+  const { userRole } = useUserRole();
+
   return (
     <nav>
       <ul>

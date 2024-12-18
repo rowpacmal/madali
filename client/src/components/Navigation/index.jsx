@@ -6,31 +6,35 @@ function Navigation() {
   const { userRole } = useContext(UserRoleContext);
 
   return (
-    <nav>
-      <ul>
-        <li>
-          <NavLink to="/">Home</NavLink>
-        </li>
+    <>
+      <p>Role: {userRole}</p>
 
-        {userRole === 'Admin' && (
+      <nav>
+        <ul>
           <li>
-            <NavLink to="/admin">Admin</NavLink>
+            <NavLink to="/">Home</NavLink>
           </li>
-        )}
 
-        {userRole === 'Teacher' && (
-          <li>
-            <NavLink to="/teacher">Teacher</NavLink>
-          </li>
-        )}
+          {userRole === 'Admin' && (
+            <li>
+              <NavLink to="/admin">Admin</NavLink>
+            </li>
+          )}
 
-        {userRole === 'Student' && (
-          <li>
-            <NavLink to="/student">Student</NavLink>
-          </li>
-        )}
-      </ul>
-    </nav>
+          {userRole === 'Teacher' && (
+            <li>
+              <NavLink to="/teacher">Teacher</NavLink>
+            </li>
+          )}
+
+          {userRole === 'Student' && (
+            <li>
+              <NavLink to="/student">Student</NavLink>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </>
   );
 }
 

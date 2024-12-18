@@ -62,9 +62,32 @@ function Admin() {
         <>
           <h2>Admin</h2>
 
+          {/* Grades */}
+          <div style={style}>
+            <h3>Grade Management</h3>
+
+            <div style={style}>
+              <button onClick={() => {}}>Get All Grades</button>
+
+              <button onClick={() => {}}>Get Grade</button>
+
+              <button onClick={() => {}}>Get Total Number of Grades</button>
+            </div>
+
+            <div style={style}>
+              <button onClick={() => {}}>Add Grades</button>
+
+              <button onClick={() => {}}>Delete Grade</button>
+
+              <button onClick={() => {}}>Update Grade</button>
+            </div>
+          </div>
+
+          <hr />
+
           {/* Classes */}
           <div style={style}>
-            <h3>Classes</h3>
+            <h3>Class Management</h3>
 
             <div style={style}>
               <button onClick={getAllClasses}>Get All Classes</button>
@@ -89,7 +112,7 @@ function Admin() {
 
           {/* Students */}
           <div style={style}>
-            <h3>Students</h3>
+            <h3>Student Management</h3>
 
             <div style={style}>
               <button
@@ -166,7 +189,7 @@ function Admin() {
 
           {/* Courses */}
           <div style={style}>
-            <h3>Courses</h3>
+            <h3>Course Management</h3>
 
             <div style={style}>
               <button
@@ -226,7 +249,7 @@ function Admin() {
 
           {/* Teachers */}
           <div style={style}>
-            <h3>Teachers</h3>
+            <h3>Teacher Management</h3>
 
             <div style={style}>
               <button onClick={getAllTeachers}>Get All Teachers</button>

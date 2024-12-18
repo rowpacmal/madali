@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../contexts/AppContext';
 import gradingSystem from '../../utils/gradingSystem.config';
-import handleCustomErrors from '../../utils/handleCustomErrors';
+import handleCustomError from '../../utils/handleCustomError';
 import useGradingSystem from '../useGradingSystem';
 
 function useUserRole() {
@@ -42,7 +42,7 @@ function useUserRole() {
             break;
         }
       } catch (error) {
-        handleCustomErrors(gradingSystem.abi, error);
+        handleCustomError(gradingSystem.abi, error);
       }
     })();
   }, [ethereum, account, gradingContract]); // Depend on gradingContract and account.

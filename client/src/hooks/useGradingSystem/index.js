@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../contexts/AppContext';
 import gradingSystem from '../../utils/gradingSystem.config';
 import initializeContract from '../../utils/initializeContract';
-// import handleCustomErrors from '../../utils/handleCustomErrors';
+// import handleCustomError from '../../utils/handleCustomError';
 
 function useGradingSystem() {
   const { ethereum, provider, signer } = useContext(AppContext);

@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-function handleCustomErrors(abi, error) {
+function handleCustomError(abi, error) {
   const iface = new ethers.Interface(abi);
 
   if (error.data) {
@@ -23,4 +23,4 @@ function handleCustomErrors(abi, error) {
   }
 }
 
-export default handleCustomErrors;
+export default handleCustomError;

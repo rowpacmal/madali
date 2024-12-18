@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import teacherManagement from '../../utils/teacherManagement.config';
 import { AppContext } from '../../contexts/AppContext';
 import initializeContract from '../../utils/initializeContract';
-import handleCustomErrors from '../../utils/handleCustomErrors';
+import handleCustomError from '../../utils/handleCustomError';
 
 function useTeacherManagement() {
   const { ethereum, account, provider, signer } = useContext(AppContext);
@@ -71,6 +71,10 @@ function useTeacherManagement() {
     }
   }
 
+  function contractError(error) {
+    return handleCustomError(teacherManagement.abi, error);
+  }
+
   /** Course functions. */
   // Listeners.
   function setupCourseEventListeners() {
@@ -129,7 +133,7 @@ function useTeacherManagement() {
 
       return coursesArray;
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
   async function getCourse(courseID) {
@@ -151,7 +155,7 @@ function useTeacherManagement() {
 
       return courseObj;
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
   async function getTotalCoursesByTeacher(teacherAddress) {
@@ -172,7 +176,7 @@ function useTeacherManagement() {
 
       return totalCoursesNumber;
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
 
@@ -187,7 +191,7 @@ function useTeacherManagement() {
 
       console.info('Courses to be deleted:', courses);
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
   async function registerCourses(teacher, courses, classes, modules) {
@@ -206,7 +210,7 @@ function useTeacherManagement() {
 
       console.info('Courses to be registered:', courses);
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
 
@@ -274,7 +278,7 @@ function useTeacherManagement() {
 
       return teachersArray;
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
   async function getTeacher(teacherAddress) {
@@ -295,7 +299,7 @@ function useTeacherManagement() {
 
       return teacherObj;
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
   async function getTotalTeachers() {
@@ -313,7 +317,7 @@ function useTeacherManagement() {
 
       return totalTeachersNumber;
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
 
@@ -328,7 +332,7 @@ function useTeacherManagement() {
 
       console.info('Teachers to be deleted:', teachers);
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
   async function registerTeachers(teachers, classes) {
@@ -341,7 +345,7 @@ function useTeacherManagement() {
 
       console.info('Teachers to be registered:', teachers);
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
   async function updateTeacher(teacher, newClass) {
@@ -355,10 +359,11 @@ function useTeacherManagement() {
       console.info('Teachers to be updated:', teacher);
       console.info('New class to be assigned:', newClass);
     } catch (error) {
-      return handleCustomErrors(teacherManagement.abi, error);
+      return contractError(error);
     }
   }
 
+  /** Exports */
   return {
     teacherContract,
 

@@ -1,13 +1,10 @@
 import { ethers } from 'ethers';
 
 async function initializeContract(contract, setState, provider, signer) {
-  if (!window.ethereum || !provider || !signer) {
-    return;
-  }
-
   let read,
     write = null;
 
+  // Initialize the contract.
   try {
     read = new ethers.Contract(contract.address, contract.abi, await provider);
     write = new ethers.Contract(contract.address, contract.abi, await signer);
@@ -17,6 +14,7 @@ async function initializeContract(contract, setState, provider, signer) {
     );
   }
 
+  // Set the state.
   setState({ read, write });
 }
 

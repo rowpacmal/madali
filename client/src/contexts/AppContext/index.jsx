@@ -4,12 +4,11 @@ import { createContext, useEffect, useState } from 'react';
 // Create context.
 const AppContext = createContext({});
 
-// Default warning message.
-const warningMessage =
-  'Warning: A web3 provider is required. Please install a web3 wallet such as MetaMask.';
-
 function AppProvider({ children }) {
   const [ethereum] = useState(window.ethereum);
+  const [warningMessage] = useState(
+    'Warning: A web3 provider is required. Please install a web3 wallet such as MetaMask.'
+  );
   const [account, setAccount] = useState('');
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);

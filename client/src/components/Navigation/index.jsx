@@ -1,10 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { useContext } from 'react';
-import { ContractContext } from '../../contexts/ContractContext';
 
-function Navigation() {
-  const { userRole } = useContext(ContractContext);
-
+function Navigation({ userRole }) {
   return (
     <nav>
       <ul>

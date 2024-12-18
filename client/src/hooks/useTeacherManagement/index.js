@@ -168,10 +168,11 @@ function useTeacherManagement() {
     dependenciesNullCheck();
 
     try {
-      const totalCourses = Number(
-        await teacherContract.read.getTotalCoursesByTeacher(teacherAddress, {
+      const totalCourses = await teacherContract.read.getTotalCoursesByTeacher(
+        teacherAddress,
+        {
           from: account,
-        })
+        }
       );
       const totalCoursesNumber = Number(totalCourses);
 
@@ -233,9 +234,9 @@ function useTeacherManagement() {
         console.error(`Error: Teacher with address ${address} already exists.`);
       }
     );
-    teacherContract.read.on('TeacherRegistered', (teacherAddress) => {
+    teacherContract.read.on('TeacherRegistered', (address) => {
       console.info(
-        `Success: Teacher with address ${teacherAddress} has been registered.`
+        `Success: Teacher with address ${address} has been registered.`
       );
     });
 
@@ -246,9 +247,9 @@ function useTeacherManagement() {
     teacherContract.read.on('TeacherDeletionFailed_NotFound', (address) => {
       console.error(`Error: Teacher with address ${address} not found.`);
     });
-    teacherContract.read.on('TeacherDeleted', (teacherAddress) => {
+    teacherContract.read.on('TeacherDeleted', (address) => {
       console.info(
-        `Success: Teacher with address ${teacherAddress} has been deleted.`
+        `Success: Teacher with address ${address} has been deleted.`
       );
     });
   }
@@ -312,11 +313,9 @@ function useTeacherManagement() {
     dependenciesNullCheck();
 
     try {
-      const totalTeachers = Number(
-        await teacherContract.read.getTotalTeachers({
-          from: account,
-        })
-      );
+      const totalTeachers = await teacherContract.read.getTotalTeachers({
+        from: account,
+      });
       const totalTeachersNumber = Number(totalTeachers);
 
       console.info('Total number of Teachers:', totalTeachersNumber);
@@ -371,6 +370,9 @@ function useTeacherManagement() {
 
   /** Exports */
   return {
+    // Contract.
+    teacherContract,
+
     // Course getters.
     getAllCoursesByTeacher,
     getCourse,

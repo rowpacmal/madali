@@ -133,11 +133,9 @@ function useStudentManagement() {
     dependenciesNullCheck();
 
     try {
-      const totalClasses = Number(
-        await studentContract.read.getTotalClasses({
-          from: account,
-        })
-      );
+      const totalClasses = await studentContract.read.getTotalClasses({
+        from: account,
+      });
       const totalClassesNumber = Number(totalClasses);
 
       console.info('Total number of Classes:', totalClassesNumber);
@@ -295,10 +293,11 @@ function useStudentManagement() {
     dependenciesNullCheck();
 
     try {
-      const totalStudents = Number(
-        await studentContract.read.getTotalStudents(classID, {
+      const totalStudents = await studentContract.read.getTotalStudents(
+        classID,
+        {
           from: account,
-        })
+        }
       );
       const totalStudentsNumber = Number(totalStudents);
 
@@ -357,6 +356,9 @@ function useStudentManagement() {
 
   /** Exports */
   return {
+    // Contract.
+    studentContract,
+
     // Class getters.
     getAllClasses,
     getTotalClasses,

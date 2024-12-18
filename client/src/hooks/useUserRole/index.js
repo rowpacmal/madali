@@ -12,7 +12,20 @@ function useUserRole() {
   // Fetch user role when gradingContract or account changes.
   useEffect(() => {
     (async function () {
-      if (!ethereum || !gradingContract || !account) {
+      if (!ethereum) {
+        console.warn('MetaMask or Ethereum provider not detected.');
+        setUserRole('');
+        return;
+      }
+
+      if (!gradingContract) {
+        console.warn('Grading contract instance is not initialized.');
+        setUserRole('');
+        return;
+      }
+
+      if (!account) {
+        console.warn('Account not detected.');
         setUserRole('');
         return;
       }

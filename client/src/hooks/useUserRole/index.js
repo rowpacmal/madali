@@ -5,14 +5,14 @@ import handleCustomErrors from '../../utils/handleCustomErrors';
 import useGradingSystem from '../useGradingSystem';
 
 function useUserRole() {
-  const { account } = useContext(AppContext);
+  const { ethereum, account } = useContext(AppContext);
   const { gradingContract } = useGradingSystem();
   const [userRole, setUserRole] = useState('');
 
   // Fetch user role when gradingContract or account changes.
   useEffect(() => {
     (async function () {
-      if (!window.ethereum || !gradingContract || !account) {
+      if (!ethereum || !gradingContract || !account) {
         setUserRole('');
         return;
       }
@@ -45,7 +45,7 @@ function useUserRole() {
         handleCustomErrors(gradingSystem.abi, error);
       }
     })();
-  }, [gradingContract, account]); // Depend on gradingContract and account.
+  }, [ethereum, account, gradingContract]); // Depend on gradingContract and account.
 
   return { userRole };
 }

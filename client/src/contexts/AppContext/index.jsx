@@ -4,12 +4,12 @@ import { createContext, useEffect, useState } from 'react';
 // Create context.
 const AppContext = createContext({});
 
-// Web3 provider.
-const ethereum = window.ethereum;
+// Default warning message.
 const warningMessage =
   'Warning: A web3 provider is required. Please install a web3 wallet such as MetaMask.';
 
 function AppProvider({ children }) {
+  const [ethereum] = useState(window.ethereum);
   const [account, setAccount] = useState('');
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -48,7 +48,7 @@ function AppProvider({ children }) {
 
         try {
           // Check for connected accounts
-          const accounts = await window.ethereum.request({
+          const accounts = await ethereum.request({
             method: 'eth_accounts',
           });
 
@@ -101,6 +101,7 @@ function AppProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
+        ethereum,
         account,
         setAccount,
         provider,

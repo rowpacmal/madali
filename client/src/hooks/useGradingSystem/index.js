@@ -5,13 +5,17 @@ import initializeContract from '../../utils/initializeContract';
 // import handleCustomErrors from '../../utils/handleCustomErrors';
 
 function useGradingSystem() {
-  const { provider, signer } = useContext(AppContext);
+  const { ethereum, provider, signer } = useContext(AppContext);
   const [gradingContract, setGradingContract] = useState(null);
 
   // Initialize the contract.
   useEffect(() => {
+    if (!ethereum || !provider || !signer) {
+      return;
+    }
+
     initializeContract(gradingSystem, setGradingContract, provider, signer);
-  }, [provider, signer]); // Depend on provider and signer.
+  }, [ethereum, provider, signer]); // Depend on ethereum, provider and signer.
 
   return { gradingContract };
 }

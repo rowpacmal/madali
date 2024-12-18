@@ -170,7 +170,7 @@ function useTeacherManagement() {
       const totalCoursesNumber = Number(totalCourses);
 
       console.info(
-        `Total number of courses by teacher (${teacherAddress}):`,
+        `Total number of Courses by teacher (${teacherAddress}):`,
         totalCoursesNumber
       );
 
@@ -313,7 +313,7 @@ function useTeacherManagement() {
       );
       const totalTeachersNumber = Number(totalTeachers);
 
-      console.info('Total number of teachers:', totalTeachersNumber);
+      console.info('Total number of Teachers:', totalTeachersNumber);
 
       return totalTeachersNumber;
     } catch (error) {
@@ -365,19 +365,21 @@ function useTeacherManagement() {
 
   /** Exports */
   return {
-    teacherContract,
-
+    // Course getters.
     getAllCoursesByTeacher,
     getCourse,
     getTotalCoursesByTeacher,
 
+    // Course setters.
     deleteCourses,
     registerCourses,
 
+    // Teacher getters.
     getAllTeachers,
     getTeacher,
     getTotalTeachers,
 
+    // Teacher setters.
     deleteTeachers,
     registerTeachers,
     updateTeacher,

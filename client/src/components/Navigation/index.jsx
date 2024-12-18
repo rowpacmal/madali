@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom';
-import useUserRole from '../../hooks/useUserRole';
+import { useContext } from 'react';
+import { UserRoleContext } from '../../contexts/UserRoleContext';
 
 function Navigation() {
-  const { userRole } = useUserRole();
+  const { userRole } = useContext(UserRoleContext);
 
   return (
     <nav>

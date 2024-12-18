@@ -23,18 +23,6 @@ function useUserRole() {
           from: account,
         });
 
-        if (account === role[0]) {
-          console.info('User role for account:', role[0], 'is:', role[1]);
-        } else {
-          console.warn('Something is wrong.');
-          console.warn(
-            'Wallet address:',
-            account,
-            'does not match msg.sender:',
-            role[0]
-          );
-        }
-
         switch (Number(role[1])) {
           case 3:
             setUserRole('Admin');
@@ -59,7 +47,7 @@ function useUserRole() {
     })();
   }, [gradingContract, account]); // Depend on gradingContract and account.
 
-  return userRole;
+  return { userRole };
 }
 
 export default useUserRole;

@@ -18,9 +18,9 @@ function handleCustomErrors(abi, error) {
     }
   } else {
     console.error('Standard error message:', error.message);
-  }
 
-  return error;
+    return error;
+  }
 }
 
 export default handleCustomErrors;

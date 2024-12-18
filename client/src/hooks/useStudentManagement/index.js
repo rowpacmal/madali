@@ -78,35 +78,188 @@ function useStudentManagement() {
   /** Class functions. */
   // Listeners.
   function setupClassEventListeners() {
-    // Register class.
+    // Add class.
+    studentContract.read.on('ClassAdditionFailed_AlreadyExists', (id) => {
+      console.error(`Error: Class with ID ${id} already exists.`);
+    });
+    studentContract.read.on('ClassCreated', (id) => {
+      console.info(`Success: Class with ID ${id} has been created.`);
+    });
+
     // Delete class.
+    studentContract.read.on('ClassDeletionFailed_NotFound', (id) => {
+      console.error(`Error: Class with ID ${id} not found.`);
+    });
+    studentContract.read.on('ClassDeleted', (id) => {
+      console.info(`Success: Class with ID ${id} has been deleted.`);
+    });
   }
   function cleanupClassEventListeners() {
-    // Register class.
+    // Add class.
+    studentContract.read.removeAllListeners(
+      'ClassAdditionFailed_AlreadyExists'
+    );
+    studentContract.read.removeAllListeners('ClassCreated');
+
     // Delete class.
+    studentContract.read.removeAllListeners('ClassDeletionFailed_NotFound');
+    studentContract.read.removeAllListeners('ClassDeleted');
   }
 
   // Getters.
+  async function getAllClasses() {
+    dependenciesNullCheck();
+
+    try {
+      const allClasses = await studentContract.read.getAllClasses({
+        from: account,
+      });
+      const classesArray = allClasses.map((classID) => Number(classID));
+
+      console.info('All Classes:', classesArray);
+
+      return classesArray;
+    } catch (error) {
+      return contractError(error);
+    }
+  }
+  async function getTotalClasses() {
+    dependenciesNullCheck();
+
+    try {
+      const totalClasses = Number(
+        await studentContract.read.getTotalClasses({
+          from: account,
+        })
+      );
+      const totalClassesNumber = Number(totalClasses);
+
+      console.info('Total number of Classes:', totalClassesNumber);
+
+      return totalClassesNumber;
+    } catch (error) {
+      return contractError(error);
+    }
+  }
 
   // Setters.
+  async function addClass(classes) {
+    dependenciesNullCheck();
+
+    try {
+      await studentContract.write.addClass(classes, {
+        from: account,
+      });
+
+      console.info('Classes to be registered:', classes);
+    } catch (error) {
+      return contractError(error);
+    }
+  }
+  async function deleteClasses(classes) {
+    dependenciesNullCheck();
+
+    try {
+      await studentContract.write.deleteClasses(classes, {
+        from: account,
+      });
+
+      console.info('Classes to be deleted:', classes);
+    } catch (error) {
+      return contractError(error);
+    }
+  }
 
   /** Student functions. */
   // Listeners.
   function setupStudentEventListeners() {
     // Register student.
     // Delete student.
+    studentContract.read.on('StudentDeletionFailed_NoStudentsToDelete', () => {
+      console.error(`Error: Class has no students to delete.`);
+    });
   }
   function cleanupStudentEventListeners() {
     // Register student.
     // Delete student.
+    studentContract.read.removeAllListeners(
+      'StudentDeletionFailed_NoStudentsToDelete'
+    );
   }
 
   // Getters.
+  async function getAllStudents(classID) {
+    dependenciesNullCheck();
+
+    try {
+      const allStudents = await studentContract.read.getAllStudents(classID, {
+        from: account,
+      });
+      const studentsArray = [...allStudents];
+
+      console.info('All Students:', studentsArray);
+
+      return studentsArray;
+    } catch (error) {
+      return contractError(error);
+    }
+  }
+  async function getStudent(studentAddress) {
+    dependenciesNullCheck();
+
+    try {
+      const student = await studentContract.read.getStudent(studentAddress, {
+        from: account,
+      });
+      const studentObj = {
+        student: student[0][0],
+        class: Number(student[0][1]),
+        exists: student[0][2],
+      };
+
+      console.info('Student:', studentObj);
+
+      return studentObj;
+    } catch (error) {
+      return contractError(error);
+    }
+  }
+  async function getTotalStudents(classID) {
+    dependenciesNullCheck();
+
+    try {
+      const totalStudents = Number(
+        await studentContract.read.getTotalStudents(classID, {
+          from: account,
+        })
+      );
+      const totalStudentsNumber = Number(totalStudents);
+
+      console.info('Total number of Students:', totalStudentsNumber);
+
+      return totalStudentsNumber;
+    } catch (error) {
+      return contractError(error);
+    }
+  }
 
   // Setters.
 
   /** Exports */
-  return { studentContract };
+  return {
+    // Class getters.
+    getAllClasses,
+    getTotalClasses,
+
+    // Class setters.
+    addClass,
+    deleteClasses,
+
+    // Student getters.
+    getAllStudents,
+    getStudent,
+    getTotalStudents,
+  };
 }
 
 export default useStudentManagement;

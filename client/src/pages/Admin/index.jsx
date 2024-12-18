@@ -35,6 +35,10 @@ function Admin() {
     getAllStudents,
     getStudent,
     getTotalStudents,
+
+    deleteStudents,
+    registerStudents,
+    updateStudent,
   } = useStudentManagement();
 
   return (
@@ -52,9 +56,11 @@ function Admin() {
         </div>
 
         <div style={style}>
-          <button onClick={() => addClass([2401])}>Add Classes</button>
+          <button onClick={() => addClass([2401, 2403])}>Add Classes</button>
 
-          <button onClick={() => deleteClasses([2401])}>Delete Classes</button>
+          <button onClick={() => deleteClasses([2401, 2403])}>
+            Delete Classes
+          </button>
         </div>
       </div>
 
@@ -66,23 +72,67 @@ function Admin() {
 
         <div style={style}>
           <button
-            onClick={async () => getAllStudents((await getAllClasses())[0])}
+            onClick={async () => {
+              getAllStudents((await getAllClasses())[0]);
+              getAllStudents((await getAllClasses())[1]);
+            }}
           >
             Get All Students
           </button>
 
           <button
-            onClick={async () =>
-              getStudent((await getAllStudents((await getAllClasses())[0]))[0])
-            }
+            onClick={async () => {
+              getStudent((await getAllStudents((await getAllClasses())[0]))[0]);
+              getStudent((await getAllStudents((await getAllClasses())[1]))[0]);
+            }}
           >
             Get Student
           </button>
 
           <button
-            onClick={async () => getTotalStudents((await getAllClasses())[0])}
+            onClick={async () => {
+              getTotalStudents((await getAllClasses())[0]);
+              getTotalStudents((await getAllClasses())[1]);
+            }}
           >
             Get Total Number of Students
+          </button>
+        </div>
+
+        <div style={style}>
+          <button
+            onClick={async () =>
+              registerStudents((await getAllClasses())[0], [
+                '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+              ])
+            }
+          >
+            Add Students
+          </button>
+
+          <button
+            onClick={async () => {
+              deleteStudents((await getAllClasses())[0], [
+                '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+              ]);
+              deleteStudents((await getAllClasses())[1], [
+                '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+              ]);
+            }}
+          >
+            Delete Students
+          </button>
+
+          <button
+            onClick={async () =>
+              updateStudent(
+                '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+                2401,
+                2403
+              )
+            }
+          >
+            Update Student
           </button>
         </div>
       </div>

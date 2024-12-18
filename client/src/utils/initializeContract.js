@@ -15,6 +15,7 @@ async function initializeContract(contract, setState, provider, signer) {
   }
 
   // Set the state.
+  console.info(`Successfully initialized the ${contract.name} contract.`);
   setState({ read, write });
 }
 

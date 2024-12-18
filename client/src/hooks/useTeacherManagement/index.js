@@ -25,33 +25,39 @@ function useTeacherManagement() {
       return;
     }
 
+    // Initialize the contract.
+    console.info('Initializing Teacher contract...');
     initializeContract(teacherManagement, setTeacherContract, provider, signer);
   }, [ethereum, provider, signer]); // Depend on ethereum, provider and signer.
 
   /** Setup event listeners during initialization. */
-  useEffect(() => {
-    if (!ethereum) {
-      console.warn('MetaMask or Ethereum provider not detected.');
-      return;
-    }
+  useEffect(
+    () => {
+      if (!ethereum) {
+        console.warn('MetaMask or Ethereum provider not detected.');
+        return;
+      }
 
-    if (!teacherContract) {
-      console.warn('Teacher contract instance is not initialized.');
-      return;
-    }
+      if (!teacherContract) {
+        console.warn('Teacher contract instance is not initialized.');
+        return;
+      }
 
-    console.info('Setting up event listeners for Teacher contract...');
+      console.info('Setting up event listeners for Teacher contract...');
 
-    setupCourseEventListeners();
-    setupTeacherEventListeners();
+      setupCourseEventListeners();
+      setupTeacherEventListeners();
 
-    return () => {
-      console.info('Cleaned up Teacher contract event listeners.');
+      return () => {
+        console.info('Cleaned up Teacher contract event listeners.');
 
-      cleanupCourseEventListeners();
-      cleanupTeacherEventListeners();
-    };
-  }, [ethereum, teacherContract]);
+        cleanupCourseEventListeners();
+        cleanupTeacherEventListeners();
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ethereum, teacherContract]
+  );
 
   /** Utility functions. */
   function dependenciesNullCheck() {
@@ -356,7 +362,7 @@ function useTeacherManagement() {
         from: account,
       });
 
-      console.info('Teachers to be updated:', teacher);
+      console.info('Teacher to be updated:', teacher);
       console.info('New class to be assigned:', newClass);
     } catch (error) {
       return contractError(error);

@@ -10,10 +10,23 @@ function useGradingSystem() {
 
   // Initialize the contract.
   useEffect(() => {
-    if (!ethereum || !provider || !signer) {
+    if (!ethereum) {
+      console.warn('MetaMask or Ethereum provider not detected.');
       return;
     }
 
+    if (!provider) {
+      console.warn('Web3 provider not detected.');
+      return;
+    }
+
+    if (!signer) {
+      console.warn('Web3 signer not detected.');
+      return;
+    }
+
+    // Initialize the contract.
+    console.info('Initializing Grading contract...');
     initializeContract(gradingSystem, setGradingContract, provider, signer);
   }, [ethereum, provider, signer]); // Depend on ethereum, provider and signer.
 

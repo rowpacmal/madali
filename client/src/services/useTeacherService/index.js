@@ -106,17 +106,17 @@ function useTeacherService() {
         throw new Error('Update data is required');
       }
 
-      const teacher = await getTeacher(id);
+      const teacherExists = await getTeacher(id);
 
-      if (!teacher) {
+      if (!teacherExists) {
         throw new Error('Teacher not found');
       }
 
       const fieldsToUpdate = Object.entries(updateData);
 
       for (let i = 0; i < fieldsToUpdate.length; i++) {
-        if (teacher[fieldsToUpdate[i][0]]) {
-          teacher[fieldsToUpdate[i][0]] = fieldsToUpdate[i][1];
+        if (teacherExists[fieldsToUpdate[i][0]]) {
+          teacherExists[fieldsToUpdate[i][0]] = fieldsToUpdate[i][1];
         } else {
           console.warn(
             `Field ${fieldsToUpdate[i][0]} does not exist in teacher`
@@ -126,7 +126,7 @@ function useTeacherService() {
 
       const response = await axios.put(
         `${baseURL}/${endpoint}/${id}`,
-        new Teacher(teacher)
+        new Teacher(teacherExists)
       );
       const data = await response.data;
       console.info('Teacher:', data);

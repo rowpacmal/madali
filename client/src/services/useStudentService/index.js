@@ -106,17 +106,17 @@ function useStudentService() {
         throw new Error('Update data is required');
       }
 
-      const student = await getStudent(id);
+      const studentExists = await getStudent(id);
 
-      if (!student) {
+      if (!studentExists) {
         throw new Error('Student not found');
       }
 
       const fieldsToUpdate = Object.entries(updateData);
 
       for (let i = 0; i < fieldsToUpdate.length; i++) {
-        if (student[fieldsToUpdate[i][0]]) {
-          student[fieldsToUpdate[i][0]] = fieldsToUpdate[i][1];
+        if (studentExists[fieldsToUpdate[i][0]]) {
+          studentExists[fieldsToUpdate[i][0]] = fieldsToUpdate[i][1];
         } else {
           console.warn(
             `Field ${fieldsToUpdate[i][0]} does not exist in student`
@@ -126,7 +126,7 @@ function useStudentService() {
 
       const response = await axios.put(
         `${baseURL}/${endpoint}/${id}`,
-        new Student(student)
+        new Student(studentExists)
       );
       const data = await response.data;
       console.info('Student:', data);

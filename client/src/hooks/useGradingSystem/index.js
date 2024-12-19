@@ -241,6 +241,7 @@ function useGradingSystem() {
     }
   }
 
+  /** Exports */
   return {
     // Contract.
     gradingContract,

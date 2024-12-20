@@ -1,0 +1,12 @@
+.label {
+  display: flex;
+  flex-direction: column;
+
+  span {
+    text-align: start;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding-left: 0.5rem;
+    opacity: 0.8;
+  }
+}

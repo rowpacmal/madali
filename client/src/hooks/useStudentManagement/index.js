@@ -78,7 +78,7 @@ function useStudentManagement() {
   }
 
   function contractError(error) {
-    return handleCustomError(studentManagement.abi, error);
+    throw handleCustomError(studentManagement.abi, error);
   }
 
   /** Class functions. */
@@ -147,7 +147,7 @@ function useStudentManagement() {
   }
 
   // Setters.
-  async function addClass(classes) {
+  async function registerClass(classes) {
     dependenciesNullCheck();
 
     try {
@@ -364,7 +364,7 @@ function useStudentManagement() {
     getTotalClasses,
 
     // Class setters.
-    addClass,
+    registerClass,
     deleteClasses,
 
     // Student getters.

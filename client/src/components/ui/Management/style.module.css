@@ -1,8 +1,19 @@
+.inputsContainer {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  gap: 1rem;
+}
+
+.form .inputsContainer:not(:last-child) {
+  border-bottom: 1px solid #24242433;
+}
+
 .inputs {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: end;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .buttons {
@@ -38,6 +49,8 @@
   flex-direction: column;
   background-color: #24242433;
   border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .ul li:not(:last-child) {
@@ -48,7 +61,6 @@
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
-  font-weight: 500;
   padding: 0.5rem 1rem;
   background-color: #24242433;
   border-radius: 0.5rem 0.5rem 0 0;

@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { SquareRoundedPlusFilled } from '../../../icons/SquareRoundedPlus';
-import Form from '../../../Form';
+import { SquareRoundedPlusFilled } from '../../icons/SquareRoundedPlus';
+import Form from '../../Form';
 
 import style from './style.module.css';
 
 function Management({
-  heading,
   list,
   library,
   isManager,
@@ -38,7 +37,7 @@ function Management({
   }
 
   function handleAddInput() {
-    setFormInputs((prevState) => [...prevState, library.inputObject]);
+    setFormInputs((prevState) => [...prevState, library.createInputObject()]);
   }
 
   function handleDeleteInput(index) {
@@ -66,11 +65,7 @@ function Management({
   }
 
   return (
-    <section>
-      <header>
-        <h2>{heading}</h2>
-      </header>
-
+    <div>
       {isManager && (
         <Form
           onSubmit={(e) => {
@@ -80,19 +75,21 @@ function Management({
         >
           {formInputs.length === 0 && (
             <p className={style.noClasses}>
-              No items to register. Click the button to add a new class.
+              No data to register. Click the button to add an item.
             </p>
           )}
 
-          {formInputs.map((formInput, index) =>
-            library.createForm(
-              formInput,
-              index,
-              style,
-              handleInputOnChange,
-              handleDeleteInput
-            )
-          )}
+          <div className={style.form}>
+            {formInputs.map((formInput, index) =>
+              library.createForm(
+                formInput,
+                index,
+                style,
+                handleInputOnChange,
+                handleDeleteInput
+              )
+            )}
+          </div>
 
           <div className={style.buttons}>
             <button type="submit" disabled={!formInputs.length}>
@@ -102,7 +99,7 @@ function Management({
             <button
               type="button"
               className={style.add + ' ' + style.button}
-              disabled={formInputs.length >= 5}
+              disabled={formInputs.length >= library.maxInputs}
               onClick={handleAddInput}
             >
               <SquareRoundedPlusFilled size={32} />
@@ -119,7 +116,7 @@ function Management({
 
           {list.length === 0 && (
             <li key="noClasses" className={style.noClasses}>
-              No items to display.
+              No data to display.
             </li>
           )}
 
@@ -152,7 +149,7 @@ function Management({
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }
 

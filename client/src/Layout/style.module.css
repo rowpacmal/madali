@@ -14,3 +14,9 @@
   align-items: center;
   gap: 0.3rem;
 }
+
+.connected {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

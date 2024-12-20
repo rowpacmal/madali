@@ -4,18 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import ClassTab from '../../components/ui/Admin/ClassTab';
 
 import style from './style.module.css';
+import { AppContext } from '../../contexts/AppContext';
 
 function Admin() {
   const navigate = useNavigate();
+  const { account } = useContext(AppContext);
   const { userRole } = useContext(UserRoleContext);
   const [tab, setTab] = useState('admin');
 
   useEffect(() => {
-    if (!userRole) {
-      return;
-    }
-
-    if (userRole !== 'Admin') {
+    if (!account || !userRole || userRole !== 'Admin') {
       navigate('/');
     }
   }, [navigate, userRole]);

@@ -17,9 +17,11 @@ function Layout() {
           </h1>
         </Link>
 
-        <ConnectWalletButton />
+        <div className={style.connected}>
+          <Navigation />
 
-        <Navigation />
+          <ConnectWalletButton />
+        </div>
       </header>
 
       <main>

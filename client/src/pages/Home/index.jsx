@@ -1,11 +1,13 @@
+import style from './style.module.css';
+
 function Home() {
   return (
     <>
-      <header>
+      <header className={style.header}>
         <h2>Welcome to Madali – The Ultimate Learning Companion!</h2>
       </header>
 
-      <div>
+      <div className={style.container}>
         <p>
           Madali is your all-in-one educational app designed to make learning
           fun, engaging, and rewarding for kids while empowering teachers to

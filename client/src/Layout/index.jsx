@@ -8,18 +8,16 @@ import style from './style.module.css';
 function Layout() {
   return (
     <>
-      <header>
-        <div className={style.connect}>
-          <Link to="/">
-            <h1 className={style.h1}>
-              <Plant size={40} />
+      <header className={style.header}>
+        <Link to="/">
+          <h1 className={style.h1}>
+            <Plant size={40} />
 
-              <span>madali</span>
-            </h1>
-          </Link>
+            <span>madali</span>
+          </h1>
+        </Link>
 
-          <ConnectWalletButton />
-        </div>
+        <ConnectWalletButton />
 
         <Navigation />
       </header>
@@ -28,7 +26,7 @@ function Layout() {
         <Outlet />
       </main>
 
-      <footer>
+      <footer className={style.footer}>
         <p>&copy; Madali Education 2023</p>
       </footer>
     </>

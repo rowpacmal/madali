@@ -11,7 +11,7 @@ function Admin() {
   const navigate = useNavigate();
   const { account } = useContext(AppContext);
   const { userRole } = useContext(UserRoleContext);
-  const [tab, setTab] = useState('admin');
+  const [tab, setTab] = useState('classes');
 
   useEffect(() => {
     if (!account || !userRole || userRole !== 'Admin') {
@@ -28,12 +28,12 @@ function Admin() {
       {userRole === 'Admin' && (
         <>
           <div className={style.tabs}>
-            <button
+            {/* <button
               onClick={() => setTab('admin')}
               className={handleButtonStyle('admin')}
             >
               Admin
-            </button>
+            </button> */}
 
             <button
               onClick={() => setTab('classes')}
@@ -58,11 +58,11 @@ function Admin() {
           </div>
 
           <div className={style.content}>
-            {tab === 'admin' && (
+            {/* {tab === 'admin' && (
               <div>
                 <h2>Admin</h2>
               </div>
-            )}
+            )} */}
 
             {tab === 'classes' && <ClassTab />}
 

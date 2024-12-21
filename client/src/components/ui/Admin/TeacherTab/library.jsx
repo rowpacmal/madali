@@ -1,5 +1,5 @@
-import { SquareRoundedMinusFilled } from '../../../icons/SquareRoundedMinus';
 import Input from '../../../Input';
+import ListItem from '../../../ListItem';
 
 const library = {
   maxInputs: 3,
@@ -8,15 +8,16 @@ const library = {
     return {
       index: Date.now(),
       walletAddress: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      address: '',
-      phoneNumber: '',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      address: 'John Doe Street 12',
+      phoneNumber: '+55 555 555 555',
+      classID: '',
     };
   },
 
-  createForm: function (
+  createFormInputs: function (
     formInput,
     index,
     style,
@@ -27,8 +28,8 @@ const library = {
       <div key={formInput.index} className={style.inputsContainer}>
         <div className={style.inputs}>
           <Input
-            placeholder="Enter teacher wallet address..."
-            label="Teacher Wallet Address"
+            placeholder="Enter wallet address..."
+            label="Wallet Address"
             value={formInput.walletAddress}
             onChange={(e) =>
               handleInputOnChange(
@@ -40,8 +41,8 @@ const library = {
           />
 
           <Input
-            placeholder="Enter teacher first name..."
-            label="Teacher First Name"
+            placeholder="Enter first name..."
+            label="First Name"
             value={formInput.firstName}
             onChange={(e) =>
               handleInputOnChange(formInput.index, 'firstName', e.target.value)
@@ -49,8 +50,8 @@ const library = {
           />
 
           <Input
-            placeholder="Enter teacher last name..."
-            label="Teacher Last Name"
+            placeholder="Enter last name..."
+            label="Last Name"
             value={formInput.lastName}
             onChange={(e) =>
               handleInputOnChange(formInput.index, 'lastName', e.target.value)
@@ -59,8 +60,8 @@ const library = {
 
           <Input
             type="email"
-            placeholder="Enter teacher email..."
-            label="Teacher Email"
+            placeholder="Enter email..."
+            label="Email"
             value={formInput.email}
             onChange={(e) =>
               handleInputOnChange(formInput.index, 'email', e.target.value)
@@ -68,8 +69,8 @@ const library = {
           />
 
           <Input
-            placeholder="Enter teacher address..."
-            label="Teacher Address"
+            placeholder="Enter address..."
+            label="Address"
             value={formInput.address}
             onChange={(e) =>
               handleInputOnChange(formInput.index, 'address', e.target.value)
@@ -78,8 +79,8 @@ const library = {
 
           <Input
             type="tel"
-            placeholder="Enter teacher phone number..."
-            label="Teacher Phone Number"
+            placeholder="Enter phone number..."
+            label="Phone Number"
             value={formInput.phoneNumber}
             onChange={(e) =>
               handleInputOnChange(
@@ -87,6 +88,16 @@ const library = {
                 'phoneNumber',
                 e.target.value
               )
+            }
+          />
+
+          <Input
+            type="number"
+            placeholder="Enter class code..."
+            label="Class Code"
+            value={formInput.classID}
+            onChange={(e) =>
+              handleInputOnChange(formInput.index, 'classID', e.target.value)
             }
           />
         </div>
@@ -104,34 +115,42 @@ const library = {
     );
   },
 
-  createListHeader: function (list, style, handleSelectAllSelections) {
+  createListBody: function (
+    item,
+    index,
+    style,
+    selections,
+    handleSelectionOnChange
+  ) {
     return (
-      <>
+      <li key={item.id} className={style.li}>
         <div className={style.checkbox}>
           <input
             type="checkbox"
-            disabled={list.length === 0}
-            onChange={handleSelectAllSelections}
+            checked={selections[item.id]}
+            onChange={(e) => handleSelectionOnChange(item.id, e.target.checked)}
           />
 
-          <span>Wallet Address</span>
+          <span>Select</span>
         </div>
 
-        <span>First Name</span>
+        <div className={style.liBody}>
+          <ListItem label="Wallet Address">{item.id}</ListItem>
 
-        <span>Last Name</span>
+          <ListItem label="First Name">{item.firstName}</ListItem>
 
-        <span>Email</span>
+          <ListItem label="Last Name">{item.lastName}</ListItem>
 
-        <span>Address</span>
+          <ListItem label="Email">{item.email}</ListItem>
 
-        <span>Phone Number</span>
-      </>
+          <ListItem label="Address">{item.address}</ListItem>
+
+          <ListItem label="Phone Number">{item.phoneNumber}</ListItem>
+
+          <ListItem label="Class">{item.classID}</ListItem>
+        </div>
+      </li>
     );
-  },
-
-  createListBody: function () {
-    return null;
   },
 };
 

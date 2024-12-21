@@ -1,5 +1,6 @@
 .inputsContainer {
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 1rem 0;
   gap: 1rem;
@@ -20,6 +21,10 @@
   display: flex;
   justify-content: center;
   gap: 0.5rem;
+}
+
+.selections {
+  padding: 1rem 0;
 }
 
 .add:hover {
@@ -45,7 +50,7 @@
 .liHeader {
   display: flex;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 1rem;
   padding: 0.5rem 1rem;
   background-color: #24242433;
   border-radius: 0.5rem 0.5rem 0 0;
@@ -53,10 +58,15 @@
 
 .li {
   display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.liBody {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  padding-bottom: 0.5rem;
 }
 
 .noClasses {
@@ -68,8 +78,4 @@
   display: flex;
   place-items: center;
   gap: 0.5rem;
-}
-
-.selections {
-  padding: 1rem 0;
 }

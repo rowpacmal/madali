@@ -1,7 +1,15 @@
 import User from './User';
 
 class Teacher extends User {
-  constructor({ id, firstName, lastName, email, address, phoneNumber }) {
+  constructor({
+    id,
+    firstName,
+    lastName,
+    email,
+    address,
+    phoneNumber,
+    classID,
+  }) {
     super({
       id,
       firstName,
@@ -11,6 +19,8 @@ class Teacher extends User {
       phoneNumber,
       role: 'teacher',
     });
+
+    this.classID = classID;
   }
 }
 

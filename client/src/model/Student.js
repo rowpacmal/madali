@@ -1,4 +1,3 @@
-import Person from './Person';
 import User from './User';
 
 class Student extends User {
@@ -9,7 +8,7 @@ class Student extends User {
     email,
     address,
     phoneNumber,
-    guardians,
+    classID,
   }) {
     super({
       id,
@@ -21,7 +20,7 @@ class Student extends User {
       role: 'student',
     });
 
-    this.guardians = guardians.map((guardian) => new Person(guardian));
+    this.classID = classID;
   }
 }
 

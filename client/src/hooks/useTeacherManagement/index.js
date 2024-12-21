@@ -78,7 +78,7 @@ function useTeacherManagement() {
   }
 
   function contractError(error) {
-    return handleCustomError(teacherManagement.abi, error);
+    throw handleCustomError(teacherManagement.abi, error);
   }
 
   /** Course functions. */

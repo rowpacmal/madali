@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Form from '../../Form';
 
 import style from './style.module.css';
@@ -8,13 +7,16 @@ function Management({
   library,
   isManager,
 
+  formInputs,
+  setFormInputs,
+  selections,
+  setSelections,
+
   handleOnSubmit,
+  handleOnRefresh,
   handleOnDelete,
   handleOnUpdate,
 }) {
-  const [formInputs, setFormInputs] = useState([]);
-  const [selections, setSelections] = useState({});
-
   function handleInputOnChange(index, field, value) {
     setFormInputs((prevState) =>
       prevState.map((c) => {
@@ -80,7 +82,7 @@ function Management({
 
           <div className={style.form}>
             {formInputs.map((formInput, index) =>
-              library.createForm(
+              library.createFormInputs(
                 formInput,
                 index,
                 style,
@@ -120,7 +122,9 @@ function Management({
               <span>Select All</span>
             </div>
 
-            <button>Refresh</button>
+            <button type="button" onClick={handleOnRefresh}>
+              Refresh
+            </button>
           </li>
 
           {list.length === 0 && (
@@ -130,33 +134,40 @@ function Management({
           )}
 
           {list.map((item, index) =>
-            library.createListBody(item, index, style, handleSelectionOnChange)
+            library.createListBody(
+              item,
+              index,
+              style,
+              selections,
+              handleSelectionOnChange
+            )
           )}
         </ul>
 
-        {handleOnDelete && (
-          <div className={style.selections}>
+        <div className={style.buttons + ' ' + style.selections}>
+          {handleOnDelete && (
             <button
               type="button"
               disabled={!Object.values(selections).includes(true)}
               onClick={handleOnDelete}
             >
-              Delete Selected
+              Delete
             </button>
-          </div>
-        )}
+          )}
 
-        {handleOnUpdate && (
-          <div className={style.selections}>
+          {handleOnUpdate && (
             <button
               type="button"
-              disabled={!Object.values(selections).includes(true)}
+              disabled={
+                Object.values(selections).filter(Boolean).length === 0 ||
+                Object.values(selections).filter(Boolean).length >= 2
+              }
               onClick={handleOnUpdate}
             >
-              Update Selected
+              Update
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

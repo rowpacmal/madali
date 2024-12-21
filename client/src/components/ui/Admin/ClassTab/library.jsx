@@ -2,7 +2,9 @@ import Input from '../../../Input';
 import ListItem from '../../../ListItem';
 
 const library = {
+  isManageable: true,
   maxInputs: 5,
+  selectionMode: 'multiple',
 
   createInputObject: function () {
     return {
@@ -66,33 +68,15 @@ const library = {
     );
   },
 
-  createListBody: function (
-    item,
-    index,
-    style,
-    selections,
-    handleSelectionOnChange
-  ) {
+  createListItems: function (item, index, style) {
     return (
-      <li key={item.id} className={style.li}>
-        <div className={style.checkbox}>
-          <input
-            type="checkbox"
-            checked={selections[item.id]}
-            onChange={(e) => handleSelectionOnChange(item.id, e.target.checked)}
-          />
+      <div className={style.liBody}>
+        <ListItem label="Class Code">{item.id}</ListItem>
 
-          <span>Select</span>
-        </div>
+        <ListItem label="Name">{item.name}</ListItem>
 
-        <div className={style.liBody}>
-          <ListItem label="Code">{item.id}</ListItem>
-
-          <ListItem label="Name">{item.name}</ListItem>
-
-          <ListItem label="Year">{item.year}</ListItem>
-        </div>
-      </li>
+        <ListItem label="Year">{item.year}</ListItem>
+      </div>
     );
   },
 };

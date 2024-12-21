@@ -2,7 +2,9 @@ import Input from '../../../Input';
 import ListItem from '../../../ListItem';
 
 const library = {
+  isManageable: true,
   maxInputs: 3,
+  selectionMode: 'multiple',
 
   createInputObject: function () {
     return {
@@ -115,41 +117,17 @@ const library = {
     );
   },
 
-  createListBody: function (
-    item,
-    index,
-    style,
-    selections,
-    handleSelectionOnChange
-  ) {
+  createListItems: function (item, index, style) {
     return (
-      <li key={item.id} className={style.li}>
-        <div className={style.checkbox}>
-          <input
-            type="checkbox"
-            checked={selections[item.id]}
-            onChange={(e) => handleSelectionOnChange(item.id, e.target.checked)}
-          />
+      <div className={style.liBody}>
+        <ListItem label="Wallet Address">{item.id}</ListItem>
 
-          <span>Select</span>
-        </div>
+        <ListItem label="Full Name">
+          {item.firstName} {item.lastName}
+        </ListItem>
 
-        <div className={style.liBody}>
-          <ListItem label="Wallet Address">{item.id}</ListItem>
-
-          <ListItem label="First Name">{item.firstName}</ListItem>
-
-          <ListItem label="Last Name">{item.lastName}</ListItem>
-
-          <ListItem label="Email">{item.email}</ListItem>
-
-          <ListItem label="Address">{item.address}</ListItem>
-
-          <ListItem label="Phone Number">{item.phoneNumber}</ListItem>
-
-          <ListItem label="Class">{item.classID}</ListItem>
-        </div>
-      </li>
+        <ListItem label="Class">{item.classID}</ListItem>
+      </div>
     );
   },
 };

@@ -20,11 +20,8 @@
 .buttons {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 0.5rem;
-}
-
-.selections {
-  padding: 1rem 0;
 }
 
 .add:hover {
@@ -63,10 +60,11 @@
 }
 
 .liBody {
-  margin-left: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 0 1rem;
 }
 
 .noClasses {

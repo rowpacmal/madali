@@ -5,7 +5,6 @@ import style from './style.module.css';
 function Management({
   list,
   library,
-  isManager,
 
   formInputs,
   setFormInputs,
@@ -14,6 +13,7 @@ function Management({
 
   handleOnSubmit,
   handleOnRefresh,
+  handleOnView,
   handleOnDelete,
   handleOnUpdate,
 }) {
@@ -65,9 +65,25 @@ function Management({
     }
   }
 
+  function getSelectionMode(mode) {
+    switch (mode) {
+      case 'single':
+        return (
+          Object.values(selections).filter(Boolean).length === 0 ||
+          Object.values(selections).filter(Boolean).length >= 2
+        );
+
+      case 'multiple':
+        return !Object.values(selections).includes(true);
+
+      default:
+        return true;
+    }
+  }
+
   return (
     <div>
-      {isManager && (
+      {library.isManageable && (
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -122,9 +138,21 @@ function Management({
               <span>Select All</span>
             </div>
 
-            <button type="button" onClick={handleOnRefresh}>
-              Refresh
-            </button>
+            <div className={style.buttons}>
+              {handleOnDelete && (
+                <button
+                  type="button"
+                  disabled={getSelectionMode(library.selectionMode)}
+                  onClick={handleOnDelete}
+                >
+                  Delete Selected
+                </button>
+              )}
+
+              <button type="button" onClick={handleOnRefresh}>
+                Refresh
+              </button>
+            </div>
           </li>
 
           {list.length === 0 && (
@@ -133,41 +161,47 @@ function Management({
             </li>
           )}
 
-          {list.map((item, index) =>
-            library.createListBody(
-              item,
-              index,
-              style,
-              selections,
-              handleSelectionOnChange
-            )
-          )}
+          {list.map((item, index) => (
+            <li key={item.id} className={style.li}>
+              <div className={style.checkbox}>
+                <input
+                  type="checkbox"
+                  checked={selections[item.id]}
+                  onChange={(e) =>
+                    handleSelectionOnChange(item.id, e.target.checked)
+                  }
+                />
+
+                <span>Select</span>
+              </div>
+
+              {library.createListItems(item, index, style)}
+
+              {handleOnUpdate ||
+                (handleOnView && (
+                  <div className={style.buttons}>
+                    {handleOnUpdate && (
+                      <button
+                        type="button"
+                        onClick={() => handleOnUpdate(item.id)}
+                      >
+                        Update
+                      </button>
+                    )}
+
+                    {handleOnView && (
+                      <button
+                        type="button"
+                        onClick={() => handleOnView(item.id)}
+                      >
+                        View
+                      </button>
+                    )}
+                  </div>
+                ))}
+            </li>
+          ))}
         </ul>
-
-        <div className={style.buttons + ' ' + style.selections}>
-          {handleOnDelete && (
-            <button
-              type="button"
-              disabled={!Object.values(selections).includes(true)}
-              onClick={handleOnDelete}
-            >
-              Delete
-            </button>
-          )}
-
-          {handleOnUpdate && (
-            <button
-              type="button"
-              disabled={
-                Object.values(selections).filter(Boolean).length === 0 ||
-                Object.values(selections).filter(Boolean).length >= 2
-              }
-              onClick={handleOnUpdate}
-            >
-              Update
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );

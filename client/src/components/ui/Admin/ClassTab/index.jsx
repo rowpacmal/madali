@@ -5,6 +5,8 @@ import Class from '../../../../model/Class';
 import Management from '../../Management';
 import library from './library';
 
+import style from './style.module.css';
+
 function ClassTab() {
   const { studentContract, getAllClasses, registerClass, deleteClasses } =
     useStudentManagement();
@@ -79,14 +81,13 @@ function ClassTab() {
 
   return (
     <section>
-      <header>
-        <h2>Classes</h2>
+      <header className={style.header}>
+        <h2>Class Management</h2>
       </header>
 
       <Management
         list={classes}
         library={library}
-        isManager
         formInputs={formInputs}
         setFormInputs={setFormInputs}
         selections={selections}

@@ -22,26 +22,11 @@
   gap: 0.5rem;
 }
 
-.button {
-  display: flex;
-  place-items: center;
-  padding: 0;
-  color: #242424;
-  background-color: transparent;
-}
-.button:disabled,
-.button:disabled:hover {
-  color: #242424;
-  background-color: transparent;
-}
-
 .add:hover {
-  color: #646cff;
-  background-color: transparent;
+  background-color: #24cf24;
 }
 .delete:hover {
-  color: #fe2424;
-  background-color: transparent;
+  background-color: #cf2424;
 }
 
 .ul {

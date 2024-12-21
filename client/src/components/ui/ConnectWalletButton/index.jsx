@@ -14,13 +14,9 @@ function ConnectWalletButton() {
       ) : (
         <div>
           {account ? (
-            <button type="button" className={style.connected}>
-              <span>
-                {account.substring(0, 6)}...
-                {account.substring(account.length - 4)}
-              </span>
-
-              <ClipboardTextFilled size={16} />
+            <button type="button">
+              {account.substring(0, 6)}...
+              {account.substring(account.length - 4)}
             </button>
           ) : (
             <button type="button" onClick={connectWallet}>

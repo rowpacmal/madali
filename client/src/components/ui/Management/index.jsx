@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { SquareRoundedPlusFilled } from '../../icons/SquareRoundedPlus';
 import Form from '../../Form';
 
 import style from './style.module.css';
@@ -98,11 +97,11 @@ function Management({
 
             <button
               type="button"
-              className={style.add + ' ' + style.button}
+              className={style.add}
               disabled={formInputs.length >= library.maxInputs}
               onClick={handleAddInput}
             >
-              <SquareRoundedPlusFilled size={32} />
+              Add
             </button>
           </div>
         </Form>
@@ -111,7 +110,17 @@ function Management({
       <div>
         <ul className={style.ul}>
           <li key="header" className={style.liHeader}>
-            {library.createListHeader(list, style, handleSelectAllSelections)}
+            <div className={style.checkbox}>
+              <input
+                type="checkbox"
+                disabled={list.length === 0}
+                onChange={handleSelectAllSelections}
+              />
+
+              <span>Select All</span>
+            </div>
+
+            <button>Refresh</button>
           </li>
 
           {list.length === 0 && (

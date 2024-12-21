@@ -94,10 +94,10 @@ const library = {
         <div>
           <button
             type="button"
-            className={style.delete + ' ' + style.button}
+            className={style.delete}
             onClick={() => handleDeleteInput(formInput.index)}
           >
-            <SquareRoundedMinusFilled size={32} />
+            Remove
           </button>
         </div>
       </div>

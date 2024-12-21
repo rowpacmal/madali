@@ -149,7 +149,7 @@ function Management({
                 </button>
               )}
 
-              <button type="button" onClick={handleOnRefresh}>
+              <button type="button" onClick={() => handleOnRefresh()}>
                 Refresh
               </button>
             </div>

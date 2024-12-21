@@ -1,0 +1,19 @@
+.header {
+  padding-bottom: 1rem;
+}
+
+.classid {
+  max-width: 240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+
+  label {
+    text-align: start;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding-left: 0.5rem;
+    opacity: 0.8;
+  }
+}

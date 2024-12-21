@@ -11,7 +11,7 @@
 }
 
 .content {
-  max-width: 200px;
+  max-width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;
 }

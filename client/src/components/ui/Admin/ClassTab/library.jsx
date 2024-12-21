@@ -3,7 +3,7 @@ import ListItem from '../../../ListItem';
 
 const library = {
   isManageable: true,
-  maxInputs: 5,
+  maxInputs: 3,
   selectionMode: 'multiple',
 
   createInputObject: function () {

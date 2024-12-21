@@ -23,7 +23,7 @@ function TeacherTab() {
 
   async function handleOnSubmit() {
     const teacherAddresses = formInputs.map((item) => item.walletAddress);
-    const teacherClasses = formInputs.map((item) => item.classID);
+    const teacherClasses = formInputs.map((item) => Number(item.classID));
 
     console.log(teacherAddresses);
     console.log(teacherClasses);

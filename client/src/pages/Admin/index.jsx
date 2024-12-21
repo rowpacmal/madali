@@ -6,6 +6,7 @@ import ClassTab from '../../components/ui/Admin/ClassTab';
 import style from './style.module.css';
 import { AppContext } from '../../contexts/AppContext';
 import TeacherTab from '../../components/ui/Admin/TeacherTab';
+import StudentTab from '../../components/ui/Admin/StudentTab';
 
 function Admin() {
   const navigate = useNavigate();
@@ -68,11 +69,7 @@ function Admin() {
 
             {tab === 'teachers' && <TeacherTab />}
 
-            {tab === 'students' && (
-              <div>
-                <h2>Students</h2>
-              </div>
-            )}
+            {tab === 'students' && <StudentTab />}
           </div>
         </>
       )}

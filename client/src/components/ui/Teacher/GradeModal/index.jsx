@@ -170,6 +170,8 @@ function GradeModal({ data, course, courseName, setShowModal }) {
       <ul className={style.ul}>
         <li className={style.liHeader}>
           <div className={style.module}>
+            <span>Minted</span>
+
             <span>Grade ID</span>
 
             <span>Module</span>
@@ -185,7 +187,13 @@ function GradeModal({ data, course, courseName, setShowModal }) {
         </li>
 
         {grades.map((grade, index) => (
-          <GradeItem grade={grade} key={index} style={style} />
+          <GradeItem
+            student={data.id}
+            course={course}
+            grade={grade}
+            key={index}
+            style={style}
+          />
         ))}
       </ul>
     </Modal>

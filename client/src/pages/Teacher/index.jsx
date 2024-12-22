@@ -47,13 +47,6 @@ function Teacher() {
             >
               Grades
             </button>
-
-            <button
-              onClick={() => setTab('certificates')}
-              className={handleButtonStyle('certificates')}
-            >
-              Certificates
-            </button>
           </div>
 
           <div className={style.content}>
@@ -62,8 +55,6 @@ function Teacher() {
             {tab === 'courses' && <CourseTab />}
 
             {tab === 'grades' && <GradeTab />}
-
-            {tab === 'certificates' && <h2>Certificate Management</h2>}
           </div>
         </>
       )}

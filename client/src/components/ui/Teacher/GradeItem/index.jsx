@@ -1,15 +1,39 @@
 import { useEffect, useState } from 'react';
 import useGradingSystem from '../../../../hooks/useGradingSystem';
+import useEducationCertificate from '../../../../hooks/useEducationCertificate';
+import axios from 'axios';
+import jsonServer from '../../../../utils/jsonServer.config';
 
-function GradeItem({ grade, style }) {
-  const [editing, setEditing] = useState(false);
+function GradeItem({ student, course, grade, style }) {
   const { updateGrade } = useGradingSystem();
+  const {
+    certificateContract,
+    mintCertificate,
+    getCertificate,
+    getTotalCertificates,
+  } = useEducationCertificate();
+  const [editing, setEditing] = useState('-');
+  const [isMinted, setIsMinted] = useState(false);
 
   useEffect(() => {
     if (!grade) return;
 
     setEditing(renderGrades(grade.grade));
   }, [grade]);
+
+  useEffect(() => {
+    (async () => {
+      const totalCertificates = await getTotalCertificates();
+
+      for (let i = 0; i < totalCertificates; i++) {
+        const certificate = await getCertificate(i);
+
+        if (certificate.grade === grade.id) {
+          setIsMinted(true);
+        }
+      }
+    })();
+  }, [certificateContract, grade]);
 
   function renderGrades(grade) {
     switch (grade) {
@@ -74,9 +98,29 @@ function GradeItem({ grade, style }) {
     setEditing(grade);
   }
 
+  async function handleOnMint() {
+    try {
+      const response = await axios.get(`${jsonServer.url}/badges`);
+      const badges = await response.data;
+      let imageURL = '';
+
+      for (let badge of badges) {
+        if (badge.course === course) {
+          imageURL = badge.url;
+        }
+      }
+
+      await mintCertificate(student, grade.id, course, imageURL);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <li className={style.li + (grade.id === null ? ' ' + style.disabled : '')}>
       <div className={style.module}>
+        <span>{grade.id !== null ? (isMinted ? 'Yes' : 'No') : '-'}</span>
+
         <span>{grade.id !== null ? grade.id : '-'}</span>
 
         <span>{grade.module}</span>
@@ -85,6 +129,7 @@ function GradeItem({ grade, style }) {
           <input
             type="text"
             value={editing}
+            placeholder="-"
             className={style.input}
             disabled={editing === '-'}
             onChange={(e) => setEditing(e.target.value)}
@@ -98,15 +143,15 @@ function GradeItem({ grade, style }) {
           disabled={grade.id === null || editing === renderGrades(grade.grade)}
           onClick={() => handleOnSave(grade.id, editing)}
         >
-          Save
+          Update
         </button>
 
         <button
           type="button"
-          disabled={grade.id === null || editing === renderGrades(grade.grade)}
-          onClick={() => setEditing(renderGrades(grade.grade))}
+          disabled={grade.id === null || isMinted}
+          onClick={() => handleOnMint()}
         >
-          Cancel
+          Mint
         </button>
       </div>
     </li>

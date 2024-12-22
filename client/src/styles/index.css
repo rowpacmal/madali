@@ -90,6 +90,18 @@ select {
   background-color: #242424;
 }
 
+input:focus {
+  background-color: #646cff;
+}
+input:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+  background-color: #242424;
+}
+input:focus::placeholder {
+  color: transparent;
+}
+
 ul,
 ol,
 li {

@@ -5,11 +5,10 @@ import Form from '../../../Form';
 import Modal from '../../../Modal';
 import style from './style.module.css';
 import useTeacherManagement from '../../../../hooks/useTeacherManagement';
-import { Log } from 'ethers';
 import GradeItem from '../GradeItem';
 import ProgressBar from '../../../ProgressBar';
 
-function GradeModal({ data, course, setShowModal }) {
+function GradeModal({ data, course, courseName, setShowModal }) {
   const { gradingContract, getAllGradesByStudent, getGrade, addGrades } =
     useGradingSystem();
   const { getCourse } = useTeacherManagement();
@@ -36,6 +35,7 @@ function GradeModal({ data, course, setShowModal }) {
   }, [displayProgress, gradeProgress]);
 
   async function handleOnSubmit() {
+    const courseID = Number(course);
     let gradeToAdd = 0;
 
     switch (gradeScore.toLocaleUpperCase()) {
@@ -74,7 +74,7 @@ function GradeModal({ data, course, setShowModal }) {
     }
 
     try {
-      await addGrades(course, gradeModule, [data.id], [gradeToAdd], {
+      await addGrades(courseID, gradeModule, [data.id], [gradeToAdd], {
         from: data.walletAddress,
       });
     } catch (error) {
@@ -83,18 +83,19 @@ function GradeModal({ data, course, setShowModal }) {
   }
 
   async function handleOnRefresh() {
+    const courseID = Number(course);
     const gradesData = [];
     const gradeIDs = await getAllGradesByStudent(data.id);
 
     for (let grade of gradeIDs) {
       const data = await getGrade(grade);
 
-      if (data.course === course) {
+      if (data.course === courseID) {
         gradesData.push(data);
       }
     }
 
-    const courseMaxModules = await getCourse(course);
+    const courseMaxModules = await getCourse(courseID);
     const maxModulesTemp = Array.from(
       { length: courseMaxModules.modules },
       (_, i) => {
@@ -129,6 +130,7 @@ function GradeModal({ data, course, setShowModal }) {
   return (
     <Modal
       title={`${data.firstName} ${data.lastName}`}
+      subTitle={`${courseName} (${course})`}
       setShowModal={setShowModal}
     >
       <Form
@@ -168,6 +170,8 @@ function GradeModal({ data, course, setShowModal }) {
       <ul className={style.ul}>
         <li className={style.liHeader}>
           <div className={style.module}>
+            <span>Grade ID</span>
+
             <span>Module</span>
 
             <span>Grade</span>

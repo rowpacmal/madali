@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import useGradingSystem from '../../../../hooks/useGradingSystem';
 
 function GradeItem({ grade, style }) {
   const [editing, setEditing] = useState(false);
+  const { updateGrade } = useGradingSystem();
 
   useEffect(() => {
     if (!grade) return;
@@ -30,24 +32,71 @@ function GradeItem({ grade, style }) {
     }
   }
 
+  async function handleOnSave(id, grade) {
+    if (id === null || id === undefined) return;
+
+    let newGrade = 0;
+
+    switch (grade.toLocaleUpperCase()) {
+      case 'A':
+        newGrade = 6;
+        break;
+
+      case 'B':
+        newGrade = 5;
+        break;
+
+      case 'C':
+        newGrade = 4;
+        break;
+
+      case 'D':
+        newGrade = 3;
+        break;
+
+      case 'E':
+        newGrade = 2;
+        break;
+
+      case 'F':
+        newGrade = 1;
+        break;
+
+      default:
+        newGrade = 0;
+        break;
+    }
+
+    console.log(id, grade, newGrade);
+
+    await updateGrade(Number(id), Number(newGrade));
+
+    setEditing(grade);
+  }
+
   return (
-    <li className={style.li}>
+    <li className={style.li + (grade.id === null ? ' ' + style.disabled : '')}>
       <div className={style.module}>
+        <span>{grade.id !== null ? grade.id : '-'}</span>
+
         <span>{grade.module}</span>
 
-        <input
-          type="text"
-          value={editing}
-          className={style.input}
-          disabled={editing === '-'}
-          onChange={(e) => setEditing(e.target.value)}
-        />
+        <div>
+          <input
+            type="text"
+            value={editing}
+            className={style.input}
+            disabled={editing === '-'}
+            onChange={(e) => setEditing(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className={style.buttons}>
         <button
           type="button"
           disabled={grade.id === null || editing === renderGrades(grade.grade)}
+          onClick={() => handleOnSave(grade.id, editing)}
         >
           Save
         </button>

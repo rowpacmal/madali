@@ -40,8 +40,9 @@
 
 .module {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: start;
   padding-right: 1rem;
 }
 
@@ -63,4 +64,11 @@
     font-size: 0.8rem;
     font-weight: 500;
   }
+}
+
+.disabled {
+  background-color: #fefefe99;
+}
+.disabled:last-child {
+  border-radius: 0 0 0.5rem 0.5rem;
 }

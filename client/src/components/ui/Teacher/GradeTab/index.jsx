@@ -17,6 +17,7 @@ function GradeTab() {
   const { getCourse } = useCourseService();
   const [students, setStudents] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [courseName, setCourseName] = useState({});
   const [courseID, setCourseID] = useState('');
   const [modalData, setModalData] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -28,11 +29,14 @@ function GradeTab() {
   }, [teacherContract, studentContract]);
 
   async function handleOnRefresh(courseIDValue = null) {
-    setCourses(await getAllCoursesByTeacher(account));
-
     const tempStudents = [];
+    const tempCourseNames = {};
     const coursesData = await getAllCoursesByTeacher(account);
-    const courseIDData = courseIDValue ? courseIDValue : coursesData[0];
+    const courseIDData = courseIDValue
+      ? courseIDValue
+      : courseID
+      ? courseID
+      : coursesData[0];
     let teacherCourse = {};
 
     if (courseIDData) {
@@ -53,11 +57,18 @@ function GradeTab() {
       tempStudents.push(data);
     }
 
+    for (let course of coursesData) {
+      const data = await getCourse(course);
+
+      tempCourseNames[course] = data.name;
+    }
+
     console.log(tempStudents);
 
     setStudents(tempStudents);
     setCourses(coursesData);
     setCourseID(courseIDData);
+    setCourseName(tempCourseNames);
   }
 
   function handleOnView(item) {
@@ -87,7 +98,7 @@ function GradeTab() {
                 <>
                   {courses.map((item) => (
                     <option key={item} value={item}>
-                      {item}
+                      {courseName[item]} ({item})
                     </option>
                   ))}
                 </>
@@ -112,6 +123,7 @@ function GradeTab() {
         <GradeModal
           data={modalData}
           course={courseID}
+          courseName={courseName[courseID]}
           setShowModal={setShowModal}
         />
       )}

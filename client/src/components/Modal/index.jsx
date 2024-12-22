@@ -1,6 +1,6 @@
 import style from './style.module.css';
 
-function Modal({ children, title, setShowModal }) {
+function Modal({ children, title, subTitle, setShowModal }) {
   const handleBackgroundClick = (e) => {
     if (e.target.id === 'background') {
       setShowModal(false);
@@ -15,7 +15,11 @@ function Modal({ children, title, setShowModal }) {
     >
       <div className={style.modalContent}>
         <header className={style.header}>
-          <h3>{title}</h3>
+          <div className={style.title}>
+            <h3>{title}</h3>
+
+            <span>{subTitle}</span>
+          </div>
 
           <button
             type="button"

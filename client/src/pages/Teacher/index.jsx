@@ -10,7 +10,7 @@ function Teacher() {
   const navigate = useNavigate();
   const { account } = useContext(AppContext);
   const { userRole } = useContext(UserRoleContext);
-  const [tab, setTab] = useState('overview');
+  const [tab, setTab] = useState('courses');
 
   useEffect(() => {
     if (!account || !userRole || userRole !== 'Teacher') {
@@ -27,12 +27,12 @@ function Teacher() {
       {userRole === 'Teacher' && (
         <>
           <div className={style.tabs}>
-            <button
+            {/* <button
               onClick={() => setTab('overview')}
               className={handleButtonStyle('overview')}
             >
               Overview
-            </button>
+            </button> */}
 
             <button
               onClick={() => setTab('courses')}
@@ -57,7 +57,7 @@ function Teacher() {
           </div>
 
           <div className={style.content}>
-            {tab === 'overview' && <h2>Overview</h2>}
+            {/* {tab === 'overview' && <h2>Overview</h2>} */}
 
             {tab === 'courses' && <CourseTab />}
 

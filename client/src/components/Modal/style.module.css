@@ -30,10 +30,22 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   width: 100%;
 }
 
 .close:hover {
   background-color: #cf2424;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.8;
+  }
 }

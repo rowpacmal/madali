@@ -1,21 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserRoleContext } from '../../contexts/UserRoleContext';
 import { useNavigate } from 'react-router-dom';
-import ClassTab from '../../components/ui/Admin/ClassTab';
-
 import style from './style.module.css';
 import { AppContext } from '../../contexts/AppContext';
-import TeacherTab from '../../components/ui/Admin/TeacherTab';
-import StudentTab from '../../components/ui/Admin/StudentTab';
+import CourseTab from '../../components/ui/Teacher/CourseTab';
 
-function Admin() {
+function Teacher() {
   const navigate = useNavigate();
   const { account } = useContext(AppContext);
   const { userRole } = useContext(UserRoleContext);
-  const [tab, setTab] = useState('classes');
+  const [tab, setTab] = useState('overview');
 
   useEffect(() => {
-    if (!account || !userRole || userRole !== 'Admin') {
+    if (!account || !userRole || userRole !== 'Teacher') {
       navigate('/');
     }
   }, [navigate, userRole]);
@@ -26,50 +23,46 @@ function Admin() {
 
   return (
     <>
-      {userRole === 'Admin' && (
+      {userRole === 'Teacher' && (
         <>
           <div className={style.tabs}>
-            {/* <button
+            <button
               onClick={() => setTab('overview')}
               className={handleButtonStyle('overview')}
             >
               Overview
-            </button> */}
-
-            <button
-              onClick={() => setTab('classes')}
-              className={handleButtonStyle('classes')}
-            >
-              Classes
             </button>
 
             <button
-              onClick={() => setTab('teachers')}
-              className={handleButtonStyle('teachers')}
+              onClick={() => setTab('courses')}
+              className={handleButtonStyle('courses')}
             >
-              Teachers
+              Courses
             </button>
 
             <button
-              onClick={() => setTab('students')}
-              className={handleButtonStyle('students')}
+              onClick={() => setTab('grades')}
+              className={handleButtonStyle('grades')}
             >
-              Students
+              Grades
+            </button>
+
+            <button
+              onClick={() => setTab('certificates')}
+              className={handleButtonStyle('certificates')}
+            >
+              Certificates
             </button>
           </div>
 
           <div className={style.content}>
-            {/* {tab === 'overview' && (
-              <div>
-                <h2>Overview</h2>
-              </div>
-            )} */}
+            {tab === 'overview' && <h2>Overview</h2>}
 
-            {tab === 'classes' && <ClassTab />}
+            {tab === 'courses' && <CourseTab />}
 
-            {tab === 'teachers' && <TeacherTab />}
+            {tab === 'grades' && <h2>Grade Management</h2>}
 
-            {tab === 'students' && <StudentTab />}
+            {tab === 'certificates' && <h2>Certificate Management</h2>}
           </div>
         </>
       )}
@@ -77,4 +70,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default Teacher;

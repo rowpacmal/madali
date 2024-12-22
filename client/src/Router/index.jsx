@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from '../Layout';
 import Home from '../pages/home';
 import Admin from '../pages/Admin';
+import Teacher from '../pages/Teacher';
 
 function Router() {
   return (
@@ -13,6 +14,10 @@ function Router() {
 
           <Route path="admin">
             <Route index element={<Admin />} />
+          </Route>
+
+          <Route path="teacher">
+            <Route index element={<Teacher />} />
           </Route>
         </Route>
       </Routes>

@@ -17,20 +17,20 @@ function Navigation() {
             {userRole === 'Admin' && (
               <>
                 <li>
-                  <NavLink to="/admin">Overview</NavLink>
+                  <NavLink to="/admin">Dashboard</NavLink>
                 </li>
               </>
             )}
 
             {userRole === 'Teacher' && (
               <li>
-                <NavLink to="/teacher">Overview</NavLink>
+                <NavLink to="/teacher">Dashboard</NavLink>
               </li>
             )}
 
             {userRole === 'Student' && (
               <li>
-                <NavLink to="/student">Overview</NavLink>
+                <NavLink to="/student">Dashboard</NavLink>
               </li>
             )}
           </ul>

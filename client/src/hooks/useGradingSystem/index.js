@@ -76,7 +76,7 @@ function useGradingSystem() {
   }
 
   function contractError(error) {
-    return handleCustomError(gradingSystem.abi, error);
+    throw handleCustomError(gradingSystem.abi, error);
   }
 
   /** Grade functions. */

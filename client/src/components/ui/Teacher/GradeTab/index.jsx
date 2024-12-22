@@ -7,6 +7,7 @@ import { AppContext } from '../../../../contexts/AppContext';
 import style from './style.module.css';
 import useStudentService from '../../../../services/useStudentService';
 import useStudentManagement from '../../../../hooks/useStudentManagement';
+import GradeModal from '../GradeModal';
 
 function GradeTab() {
   const { account } = useContext(AppContext);
@@ -107,7 +108,13 @@ function GradeTab() {
         />
       </section>
 
-      {showModal && <></>}
+      {showModal && (
+        <GradeModal
+          data={modalData}
+          course={courseID}
+          setShowModal={setShowModal}
+        />
+      )}
     </>
   );
 }

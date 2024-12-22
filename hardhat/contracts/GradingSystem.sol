@@ -217,37 +217,19 @@ contract GradingSystem is AccessControl {
     // Grade
     function getAllGradesByStudent(
         address _studentAddress
-    )
-        external
-        view
-        onlyAuthorizedStudent(_studentAddress)
-        validAddress(_studentAddress)
-        returns (uint256[] memory)
-    {
+    ) external view validAddress(_studentAddress) returns (uint256[] memory) {
         return gradeID[_studentAddress];
     }
 
     function getGrade(
         uint256 _gradeID
-    )
-        external
-        view
-        onlyAuthorizedStudent(grades[_gradeID].student)
-        requireAssignedGrade(_gradeID)
-        returns (Grade memory)
-    {
+    ) external view requireAssignedGrade(_gradeID) returns (Grade memory) {
         return grades[_gradeID];
     }
 
     function getTotalGradesByStudent(
         address _studentAddress
-    )
-        external
-        view
-        onlyAuthorizedStudent(_studentAddress)
-        validAddress(_studentAddress)
-        returns (uint256)
-    {
+    ) external view validAddress(_studentAddress) returns (uint256) {
         return gradeID[_studentAddress].length;
     }
 

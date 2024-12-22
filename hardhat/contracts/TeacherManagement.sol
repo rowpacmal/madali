@@ -318,41 +318,24 @@ contract TeacherManagement is AccessControl {
     // Course
     function getAllCoursesByTeacher(
         address _teacherAddress
-    )
-        external
-        view
-        onlyTeacher
-        validAddress(_teacherAddress)
-        returns (uint256[] memory)
-    {
+    ) external view validAddress(_teacherAddress) returns (uint256[] memory) {
         return courseID[_teacherAddress];
     }
 
     function getCourse(
         uint256 _courseID
-    ) external view onlyTeacher returns (Course memory) {
+    ) external view returns (Course memory) {
         return courses[_courseID];
     }
 
     function getTotalCoursesByTeacher(
         address _teacherAddress
-    )
-        external
-        view
-        onlyTeacher
-        validAddress(_teacherAddress)
-        returns (uint256)
-    {
+    ) external view validAddress(_teacherAddress) returns (uint256) {
         return courseID[_teacherAddress].length;
     }
 
     // Teacher
-    function getAllTeachers()
-        external
-        view
-        onlyTeacher
-        returns (address[] memory)
-    {
+    function getAllTeachers() external view returns (address[] memory) {
         return teacherKeys;
     }
 
@@ -361,14 +344,13 @@ contract TeacherManagement is AccessControl {
     )
         external
         view
-        onlyTeacher
         validAddress(_teacherAddress)
         returns (Teacher memory, uint256[] memory)
     {
         return (teachers[_teacherAddress], courseID[_teacherAddress]);
     }
 
-    function getTotalTeachers() external view onlyTeacher returns (uint256) {
+    function getTotalTeachers() external view returns (uint256) {
         return teacherKeys.length;
     }
 

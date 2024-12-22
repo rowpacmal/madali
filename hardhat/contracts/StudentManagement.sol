@@ -252,41 +252,28 @@ contract StudentManagement is AccessControl {
 
     /** Getter Functions */
     // Course
-    function getAllClasses()
-        external
-        view
-        onlyStudent
-        returns (uint16[] memory)
-    {
+    function getAllClasses() external view returns (uint16[] memory) {
         return classID;
     }
 
-    function getTotalClasses() external view onlyStudent returns (uint256) {
+    function getTotalClasses() external view returns (uint256) {
         return classID.length;
     }
 
     // Student
     function getAllStudents(
         uint16 _classID
-    ) external view onlyStudent returns (address[] memory) {
+    ) external view returns (address[] memory) {
         return studentKeys[_classID];
     }
 
     function getStudent(
         address _studentAddress
-    )
-        external
-        view
-        onlyStudent
-        validAddress(_studentAddress)
-        returns (Student memory)
-    {
+    ) external view validAddress(_studentAddress) returns (Student memory) {
         return (students[_studentAddress]);
     }
 
-    function getTotalStudents(
-        uint16 _classID
-    ) external view onlyStudent returns (uint256) {
+    function getTotalStudents(uint16 _classID) external view returns (uint256) {
         return studentKeys[_classID].length;
     }
 

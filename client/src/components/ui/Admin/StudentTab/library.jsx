@@ -3,6 +3,7 @@ import ListItem from '../../../ListItem';
 
 const library = {
   isManageable: true,
+  isSelectable: true,
   maxInputs: 3,
   selectionMode: 'multiple',
 

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import style from './style.module.css';
 import { AppContext } from '../../contexts/AppContext';
 import CourseTab from '../../components/ui/Teacher/CourseTab';
+import GradeTab from '../../components/ui/Teacher/GradeTab';
 
 function Teacher() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ function Teacher() {
 
             {tab === 'courses' && <CourseTab />}
 
-            {tab === 'grades' && <h2>Grade Management</h2>}
+            {tab === 'grades' && <GradeTab />}
 
             {tab === 'certificates' && <h2>Certificate Management</h2>}
           </div>

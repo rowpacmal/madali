@@ -128,17 +128,19 @@ function Management({
       <div>
         <ul className={style.ul}>
           <li key="header" className={style.liHeader}>
-            <div className={style.checkbox}>
-              <input
-                type="checkbox"
-                disabled={list.length === 0}
-                onChange={handleSelectAllSelections}
-              />
+            {library.isSelectable && (
+              <div className={style.checkbox}>
+                <input
+                  type="checkbox"
+                  disabled={list.length === 0}
+                  onChange={handleSelectAllSelections}
+                />
 
-              <span>Select All</span>
-            </div>
+                <span>Select All</span>
+              </div>
+            )}
 
-            <div className={style.buttons}>
+            <div className={style.buttons + ' ' + style.refresh}>
               {handleOnDelete && (
                 <button
                   type="button"
@@ -163,42 +165,37 @@ function Management({
 
           {list.map((item, index) => (
             <li key={item.id} className={style.li}>
-              <div className={style.checkbox}>
-                <input
-                  type="checkbox"
-                  checked={selections[item.id]}
-                  onChange={(e) =>
-                    handleSelectionOnChange(item.id, e.target.checked)
-                  }
-                />
+              {library.isSelectable && (
+                <div className={style.checkbox}>
+                  <input
+                    type="checkbox"
+                    checked={selections[item.id]}
+                    onChange={(e) =>
+                      handleSelectionOnChange(item.id, e.target.checked)
+                    }
+                  />
 
-                <span>Select</span>
-              </div>
+                  <span>Select</span>
+                </div>
+              )}
 
               {library.createListItems(item, index, style)}
 
-              {handleOnUpdate ||
-                (handleOnView && (
-                  <div className={style.buttons}>
-                    {handleOnUpdate && (
-                      <button
-                        type="button"
-                        onClick={() => handleOnUpdate(item.id)}
-                      >
-                        Update
-                      </button>
-                    )}
+              {(handleOnUpdate || handleOnView) && (
+                <div className={style.buttons}>
+                  {handleOnUpdate && (
+                    <button type="button" onClick={() => handleOnUpdate(item)}>
+                      Update
+                    </button>
+                  )}
 
-                    {handleOnView && (
-                      <button
-                        type="button"
-                        onClick={() => handleOnView(item.id)}
-                      >
-                        View
-                      </button>
-                    )}
-                  </div>
-                ))}
+                  {handleOnView && (
+                    <button type="button" onClick={() => handleOnView(item)}>
+                      View
+                    </button>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>

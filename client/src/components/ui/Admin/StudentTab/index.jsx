@@ -4,10 +4,7 @@ import useStudentService from '../../../../services/useStudentService';
 import Management from '../../Management';
 import library from './library';
 import Student from '../../../../model/Student';
-import Input from '../../../Input';
-
 import style from './style.module.css';
-import { use } from 'react';
 
 function StudentTab() {
   const {
@@ -71,7 +68,11 @@ function StudentTab() {
       : classID
       ? classID
       : classesData[0];
-    const studentAddresses = await getAllStudents(Number(classIDData));
+    let studentAddresses = [];
+
+    if (classIDData) {
+      studentAddresses = await getAllStudents(Number(classIDData));
+    }
 
     for (let address of studentAddresses) {
       const data = await getStudent(address);
@@ -117,22 +118,32 @@ function StudentTab() {
         <h2>Student Management</h2>
       </header>
 
-      <div className={style.classid}>
-        <label>Class Code</label>
+      <div className={style.dropdown}>
+        <div className={style.selector}>
+          <label>Class Code</label>
 
-        <select
-          value={classID}
-          onChange={(e) => {
-            setClassID(e.target.value);
-            handleOnRefresh(e.target.value);
-          }}
-        >
-          {classes.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+          <select
+            value={classID}
+            onChange={(e) => {
+              setClassID(e.target.value);
+              handleOnRefresh(e.target.value);
+            }}
+          >
+            {classes.length > 0 ? (
+              <>
+                {classes.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </>
+            ) : (
+              <option disabled selected>
+                No classes found
+              </option>
+            )}
+          </select>
+        </div>
       </div>
 
       <Management

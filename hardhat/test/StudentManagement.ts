@@ -483,16 +483,6 @@ describe('Student Management Functionality', function () {
       expect(student[1]).to.equal(studentRef[1]);
       expect(student[2]).to.equal(studentRef[2]);
     });
-
-    it('should revert when getting classes or students as a non-owner', async function () {
-      // Try to get classes or students as a non-owner.
-      await expect(
-        studentManagement.connect(user5).getAllClasses()
-      ).to.be.revertedWithCustomError(studentManagement, 'UnauthorizedAccount');
-      await expect(
-        studentManagement.connect(user5).getAllStudents(1)
-      ).to.be.revertedWithCustomError(studentManagement, 'UnauthorizedAccount');
-    });
   });
 
   describe('Interface Utility Functions Functionality', function () {

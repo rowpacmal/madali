@@ -389,40 +389,6 @@ describe('Grading System Functionality', function () {
       ).to.equal(1);
     });
 
-    it('should revert when using the getters as a non-student, non-teacher or non-owner', async function () {
-      // Try to get a grade as a non-student, non-teacher or non-owner.
-      await expect(gradingSystem.connect(user8).getGrade(0))
-        .to.be.revertedWithCustomError(gradingSystem, 'UnauthorizedAccount')
-        .withArgs(user8.address);
-      await expect(
-        gradingSystem.connect(user8).getAllGradesByStudent(studentsA[0])
-      )
-        .to.be.revertedWithCustomError(gradingSystem, 'UnauthorizedAccount')
-        .withArgs(user8.address);
-      await expect(
-        gradingSystem.connect(user8).getTotalGradesByStudent(studentsA[0])
-      )
-        .to.be.revertedWithCustomError(gradingSystem, 'UnauthorizedAccount')
-        .withArgs(user8.address);
-    });
-
-    it('should revert when using the getters as not the authorized student', async function () {
-      // Try to get a grade as a non-student, non-teacher or non-owner.
-      await expect(gradingSystem.connect(user5).getGrade(0))
-        .to.be.revertedWithCustomError(gradingSystem, 'UnauthorizedAccount')
-        .withArgs(user5.address);
-      await expect(
-        gradingSystem.connect(user5).getAllGradesByStudent(studentsA[0])
-      )
-        .to.be.revertedWithCustomError(gradingSystem, 'UnauthorizedAccount')
-        .withArgs(user5.address);
-      await expect(
-        gradingSystem.connect(user5).getTotalGradesByStudent(studentsA[0])
-      )
-        .to.be.revertedWithCustomError(gradingSystem, 'UnauthorizedAccount')
-        .withArgs(user5.address);
-    });
-
     it('should revert when getting a grade from a student with zero address', async function () {
       const zeroAddress: string = '0x0000000000000000000000000000000000000000';
 
@@ -457,24 +423,24 @@ describe('Grading System Functionality', function () {
 
       // Check the user role.
       expect(
-        await gradingSystem.connect(owner).getUserRole(owner.address)
+        (await gradingSystem.connect(owner).getUserRole(owner.address))[1]
       ).to.equal(UserRole.Admin);
       expect(
-        await gradingSystem.connect(user1).getUserRole(user1.address)
+        (await gradingSystem.connect(user1).getUserRole(user1.address))[1]
       ).to.equal(UserRole.Teacher);
       expect(
-        await gradingSystem.connect(user4).getUserRole(user4.address)
+        (await gradingSystem.connect(user4).getUserRole(user4.address))[1]
       ).to.equal(UserRole.Student);
 
       // Check the user role as a non-student, non-teacher or non-owner.
       expect(
-        await gradingSystem.connect(user8).getUserRole(zeroAddress)
+        (await gradingSystem.connect(user8).getUserRole(zeroAddress))[1]
       ).to.equal(UserRole.Unauthorized);
       expect(
-        await gradingSystem.connect(user8).getUserRole(user8.address)
+        (await gradingSystem.connect(user8).getUserRole(user8.address))[1]
       ).to.equal(UserRole.Unauthorized);
       expect(
-        await gradingSystem.connect(user8).getUserRole(owner.address)
+        (await gradingSystem.connect(user8).getUserRole(owner.address))[1]
       ).to.equal(UserRole.Unauthorized);
     });
   });

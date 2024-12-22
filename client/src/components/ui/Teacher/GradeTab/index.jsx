@@ -85,7 +85,7 @@ function GradeTab() {
 
         <div className={style.dropdown}>
           <div className={style.selector}>
-            <label>Course Code</label>
+            <label>Course Name (Course Code)</label>
 
             <select
               value={courseID}

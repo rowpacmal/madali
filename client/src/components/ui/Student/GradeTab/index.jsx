@@ -54,7 +54,6 @@ function GradeTab() {
   }
 
   function handleOnView(item) {
-    console.log(item);
     setModalData(item);
     setShowModal(true);
   }

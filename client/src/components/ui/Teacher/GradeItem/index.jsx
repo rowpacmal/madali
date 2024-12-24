@@ -108,8 +108,10 @@ function GradeItem({ student, course, grade, style }) {
       const badges = await response.data;
       let imageURL = '';
 
+      console.log(badges);
+
       for (let badge of badges) {
-        if (badge.course === course) {
+        if (Number(badge.course) === Number(course)) {
           imageURL = badge.url;
         }
       }

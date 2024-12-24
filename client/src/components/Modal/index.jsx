@@ -16,9 +16,9 @@ function Modal({ children, title, subTitle, setShowModal }) {
       <div className={style.modalContent}>
         <header className={style.header}>
           <div className={style.title}>
-            <h3>{title}</h3>
+            {title && <h3>{title}</h3>}
 
-            <span>{subTitle}</span>
+            {subTitle && <span>{subTitle}</span>}
           </div>
 
           <button

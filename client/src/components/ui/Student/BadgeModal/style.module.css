@@ -1,0 +1,52 @@
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.input {
+  text-align: center;
+  width: 100%;
+}
+
+.ul {
+  width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #24242433;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.ul li:not(:last-child) {
+  border-bottom: 1px solid #24242433;
+}
+
+.li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.image {
+  width: 320px;
+  height: auto;
+  padding: 1rem 0;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.item {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 240px;
+}

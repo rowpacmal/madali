@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import style from './style.module.css';
 import { AppContext } from '../../contexts/AppContext';
 import GradeTab from '../../components/ui/Student/GradeTab';
+import BadgeTab from '../../components/ui/Student/BadgeTab';
 
 function Student() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function Student() {
           <div className={style.content}>
             {tab === 'grades' && <GradeTab />}
 
-            {tab === 'badges' && <h2>Badge Collection</h2>}
+            {tab === 'badges' && <BadgeTab />}
           </div>
         </>
       )}

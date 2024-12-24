@@ -68,34 +68,36 @@ function BadgeModal({ data, setShowModal }) {
     <Modal title="Badge Details" setShowModal={setShowModal}>
       <img src={data.imageURL} alt="" className={style.image} />
 
-      <ul className={style.ul}>
-        <ViewItem
-          label="Contract Address"
-          data={educationCertificate.address}
-        />
+      <div className={style.ulContainer}>
+        <ul className={style.ul}>
+          <ViewItem
+            label="Contract Address"
+            data={educationCertificate.address}
+          />
 
-        <ViewItem label="Certificate ID" data={data.certificate} />
+          <ViewItem label="Certificate ID" data={data.certificate} />
 
-        <ViewItem label="NFT Owner" data={data.owner} />
+          <ViewItem label="NFT Owner" data={data.owner} />
 
-        <ViewItem label="Course" data={courseName} />
+          <ViewItem label="Course" data={courseName} />
 
-        <ViewItem label="Course Code" data={data.course} />
+          <ViewItem label="Course Code" data={data.course} />
 
-        <ViewItem label="Teacher" data={teacherName} />
+          <ViewItem label="Teacher" data={teacherName} />
 
-        <ViewItem label="Teacher Wallet" data={data.teacher} />
+          <ViewItem label="Teacher Wallet" data={data.teacher} />
 
-        <ViewItem label="Student" data={studentName} />
+          <ViewItem label="Student" data={studentName} />
 
-        <ViewItem label="Student Wallet" data={data.student} />
+          <ViewItem label="Student Wallet" data={data.student} />
 
-        <ViewItem label="Grade ID" data={data.id} />
+          <ViewItem label="Grade ID" data={data.id} />
 
-        <ViewItem label="Grade" data={renderGrades(data.grade)} />
+          <ViewItem label="Grade" data={renderGrades(data.grade)} />
 
-        <ViewItem label="Module" data={data.module} />
-      </ul>
+          <ViewItem label="Module" data={data.module} />
+        </ul>
+      </div>
     </Modal>
   );
 }

@@ -1,13 +1,5 @@
-.inputs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.input {
-  text-align: center;
-  width: 100%;
+.ulContainer {
+  overflow-x: auto;
 }
 
 .ul {
@@ -49,4 +41,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 240px;
+}
+
+@media screen and (max-width: 400px) {
+  .image {
+    width: 240px;
+  }
 }

@@ -171,35 +171,37 @@ function GradeModal({ data, course, courseName, setShowModal }) {
         <ProgressBar progress={gradeProgress} />
       </div>
 
-      <ul className={style.ul}>
-        <li className={style.liHeader}>
-          <div className={style.module}>
-            <span>Minted</span>
+      <div className={style.ulContainer}>
+        <ul className={style.ul}>
+          <li className={style.liHeader}>
+            <div className={style.module}>
+              <span>Minted</span>
 
-            <span>Grade ID</span>
+              <span>Grade ID</span>
 
-            <span>Module</span>
+              <span>Module</span>
 
-            <span>Grade</span>
-          </div>
+              <span>Grade</span>
+            </div>
 
-          <div className={style.buttons}>
-            <button type="button" onClick={handleOnRefresh}>
-              Refresh
-            </button>
-          </div>
-        </li>
+            <div className={style.buttons}>
+              <button type="button" onClick={handleOnRefresh}>
+                Refresh
+              </button>
+            </div>
+          </li>
 
-        {grades.map((grade, index) => (
-          <GradeItem
-            student={data.id}
-            course={course}
-            grade={grade}
-            key={index}
-            style={style}
-          />
-        ))}
-      </ul>
+          {grades.map((grade, index) => (
+            <GradeItem
+              student={data.id}
+              course={course}
+              grade={grade}
+              key={index}
+              style={style}
+            />
+          ))}
+        </ul>
+      </div>
     </Modal>
   );
 }

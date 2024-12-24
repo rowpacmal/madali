@@ -3,6 +3,7 @@
   background-color: #242424;
   height: 20px;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .progress {

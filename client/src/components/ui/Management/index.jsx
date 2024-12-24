@@ -125,7 +125,7 @@ function Management({
         </Form>
       )}
 
-      <div>
+      <div className={style.ulContainer}>
         <ul className={style.ul}>
           <li key="header" className={style.liHeader}>
             {library.isSelectable && (

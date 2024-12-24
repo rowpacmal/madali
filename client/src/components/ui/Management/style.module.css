@@ -31,6 +31,10 @@
   background-color: #cf2424;
 }
 
+.ulContainer {
+  overflow-x: auto;
+}
+
 .ul {
   display: flex;
   flex-direction: column;
@@ -38,6 +42,7 @@
   border-radius: 0.5rem;
   font-size: 0.8rem;
   font-weight: 500;
+  min-width: 600px;
 }
 
 .ul li:not(:last-child) {

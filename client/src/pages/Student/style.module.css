@@ -1,0 +1,29 @@
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.button {
+  border: none;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+}
+.button:hover {
+  color: #646cff;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.active {
+  color: #646cff;
+  text-decoration: underline;
+}

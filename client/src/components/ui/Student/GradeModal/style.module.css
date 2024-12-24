@@ -1,0 +1,74 @@
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.input {
+  text-align: center;
+  width: 100%;
+}
+
+.ul {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #24242433;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.ul li:not(:last-child) {
+  border-bottom: 1px solid #24242433;
+}
+
+.liHeader,
+.li {
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  align-items: center;
+  padding: 1rem;
+}
+
+.liHeader {
+  font-weight: 500;
+  font-size: 0.8rem;
+  background-color: #24242433;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.module {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  text-align: start;
+  padding-right: 1rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0 2rem;
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+}
+
+.disabled {
+  background-color: #fefefe99;
+}
+.disabled:last-child {
+  border-radius: 0 0 0.5rem 0.5rem;
+}

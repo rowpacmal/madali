@@ -90,7 +90,7 @@ select {
   background-color: #242424;
 }
 
-input:focus {
+input:focus:not(:read-only) {
   background-color: #646cff;
 }
 input:disabled {

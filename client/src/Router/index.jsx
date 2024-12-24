@@ -3,6 +3,7 @@ import Layout from '../Layout';
 import Home from '../pages/home';
 import Admin from '../pages/Admin';
 import Teacher from '../pages/Teacher';
+import Student from '../pages/Student';
 
 function Router() {
   return (
@@ -18,6 +19,10 @@ function Router() {
 
           <Route path="teacher">
             <Route index element={<Teacher />} />
+          </Route>
+
+          <Route path="student">
+            <Route index element={<Student />} />
           </Route>
         </Route>
       </Routes>

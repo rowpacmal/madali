@@ -21,19 +21,23 @@ function GradeItem({ student, course, grade, style }) {
     setEditing(renderGrades(grade.grade));
   }, [grade]);
 
-  useEffect(() => {
-    (async () => {
-      const totalCertificates = await getTotalCertificates();
+  useEffect(
+    () => {
+      (async () => {
+        const totalCertificates = await getTotalCertificates();
 
-      for (let i = 0; i < totalCertificates; i++) {
-        const certificate = await getCertificate(i);
+        for (let i = 0; i < totalCertificates; i++) {
+          const certificate = await getCertificate(i);
 
-        if (certificate.grade === grade.id) {
-          setIsMinted(true);
+          if (certificate.grade === grade.id) {
+            setIsMinted(true);
+          }
         }
-      }
-    })();
-  }, [certificateContract, grade]);
+      })();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [certificateContract, grade]
+  );
 
   function renderGrades(grade) {
     switch (grade) {

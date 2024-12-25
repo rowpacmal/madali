@@ -146,27 +146,33 @@ contract TeacherManagement is AccessControl {
         whenNotLocked
         provideTeachers(_teachers)
     {
+        // Check if there are teachers to delete.
         if (teacherKeys.length == 0) {
             revert NoTeachersToDelete();
         }
 
+        // Loop through and delete the teachers.
         for (uint256 i = 0; i < _teachers.length; ++i) {
             address _teacherAddress = _teachers[i];
 
+            // Check if the teacher address is zero.
             if (_teacherAddress == address(0)) {
                 emit TeacherDeletionFailed_ZeroAddress();
 
                 continue;
             }
 
+            // Check if the teacher exists.
             if (!teachers[_teacherAddress].exists) {
                 emit TeacherDeletionFailed_NotFound(_teacherAddress);
 
                 continue;
             }
 
+            // Delete the teacher.
             delete teachers[_teacherAddress];
 
+            // Delete the teacher from the teacherKeys array.
             address _lastTeacherKey = teacherKeys[teacherKeys.length - 1];
             uint256 _teacherIndex = teacherIndex[_teacherAddress];
 
@@ -176,12 +182,15 @@ contract TeacherManagement is AccessControl {
 
             delete teacherIndex[_teacherAddress];
 
+            // Delete the teacher's courses.
             if (courseID[_teacherAddress].length == 0) {
                 emit CourseDeletionFailed_NoCoursesToDelete();
             } else {
+                // Call the batch delete courses function.
                 batchDeleteCourses(courseID[_teacherAddress], _teacherAddress);
             }
 
+            // Emit the teacher deleted event.
             emit TeacherDeleted(_teacherAddress);
         }
     }
@@ -198,6 +207,7 @@ contract TeacherManagement is AccessControl {
         provideTeachers(_teachers)
         provideClasses(_classes)
     {
+        // Check if the number of teachers and classes are the same length.
         if (_teachers.length != _classes.length) {
             revert TeachersClassesLengthMismatch(
                 _teachers.length,
@@ -205,30 +215,36 @@ contract TeacherManagement is AccessControl {
             );
         }
 
+        // Loop through and register the teachers.
         for (uint256 i; i < _teachers.length; ++i) {
             address _teacherAddress = _teachers[i];
 
+            // Check if the teacher address is zero.
             if (_teacherAddress == address(0)) {
                 emit TeacherAdditionFailed_ZeroAddress();
 
                 continue;
             }
 
+            // Check if the teacher already exists.
             if (teachers[_teacherAddress].exists) {
                 emit TeacherAdditionFailed_AlreadyExists(_teacherAddress);
 
                 continue;
             }
 
+            // Register the teacher.
             teachers[_teacherAddress] = Teacher({
                 key: _teacherAddress,
                 exists: true,
                 class: _classes[i]
             });
 
+            // Add the teacher to the teacherKeys array.
             teacherKeys.push(_teacherAddress);
             teacherIndex[_teacherAddress] = teacherKeys.length - 1;
 
+            // Emit the teacher registered event.
             emit TeacherRegistered(_teacherAddress);
         }
     }
@@ -245,6 +261,7 @@ contract TeacherManagement is AccessControl {
         validAddress(_teacherAddress)
         requireAssignedTeacher(_teacherAddress)
     {
+        // Update the teacher.
         Teacher storage _teacherToUpdate = teachers[_teacherAddress];
         _teacherToUpdate.class = _newClassID;
     }
@@ -261,14 +278,17 @@ contract TeacherManagement is AccessControl {
         validAddress(_teacherAddress)
         requireAssignedTeacher(_teacherAddress)
     {
+        // Check if there are provided courses to delete.
         if (_courses.length == 0) {
             revert NoCoursesProvided();
         }
 
+        // Check if there are courses to delete.
         if (courseID[_teacherAddress].length == 0) {
             revert NoCoursesToDelete();
         }
 
+        // Call the batch delete courses function.
         batchDeleteCourses(_courses, _teacherAddress);
     }
 
@@ -291,6 +311,7 @@ contract TeacherManagement is AccessControl {
     {
         uint256 _totalArrayLength = _courses.length;
 
+        // Check if the number of courses, classes, and modules are the same length.
         if (
             _classes.length != _totalArrayLength ||
             _modules.length != _totalArrayLength
@@ -302,15 +323,18 @@ contract TeacherManagement is AccessControl {
             );
         }
 
+        // Loop through and register the courses.
         for (uint256 i; i < _courses.length; ++i) {
             uint256 _courseID = _courses[i];
 
+            // Check if the course already exists.
             if (courses[_courseID].exists) {
                 emit CourseAdditionFailed_AlreadyExists(_courseID);
 
                 continue;
             }
 
+            // Register the course.
             courses[_courseID] = Course({
                 teacher: _teacherAddress,
                 exists: true,
@@ -319,8 +343,12 @@ contract TeacherManagement is AccessControl {
                 modules: _modules[i]
             });
 
+            // Add the course to the courseID array.
+            // Call the add course to teacher function.
+            // This was added because of a "too deep nesting" error in Solidity.
             addCourseToTeacher(_teacherAddress, _courseID);
 
+            // Emit the course registered event.
             emit CourseRegistered(_courseID);
         }
     }
@@ -372,6 +400,7 @@ contract TeacherManagement is AccessControl {
         address _teacherAddress,
         uint256 _courseID
     ) private {
+        // Add the course to the courseID array.
         courseID[_teacherAddress].push(_courseID);
         courseIndex[_courseID] = courseID[_teacherAddress].length - 1;
     }
@@ -380,23 +409,28 @@ contract TeacherManagement is AccessControl {
         uint256[] memory _courses,
         address _teacherAddress
     ) private {
+        // Loop through and delete the courses.
         for (uint256 i = 0; i < _courses.length; ++i) {
             uint256 _courseID = _courses[i];
 
+            // Check if the course exists.
             if (!courses[_courseID].exists) {
                 emit CourseDeletionFailed_NotFound(_courseID);
 
                 continue;
             }
 
+            // Check if the course is owned by the teacher.
             if (courses[_courseID].teacher != _teacherAddress) {
                 emit CourseDeletionFailed_NotOwned(_courseID);
 
                 continue;
             }
 
+            // Delete the course.
             delete courses[_courseID];
 
+            // Delete the course from the courseID array.
             uint256 _lastCourseID = courseID[_teacherAddress][
                 courseID[_teacherAddress].length - 1
             ];
@@ -406,8 +440,10 @@ contract TeacherManagement is AccessControl {
             courseID[_teacherAddress][_courseIndex] = _lastCourseID;
             courseID[_teacherAddress].pop();
 
+            // Delete the course from the courseIndex array.
             delete courseIndex[_courseID];
 
+            // Emit the course deleted event.
             emit CourseDeleted(_courseID);
         }
     }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
+// Import custom AccessControl contract, and the student management contract interface.
 import "./AccessControl.sol";
 import "./interfaces/IStudentManagement.sol";
 
@@ -71,6 +72,7 @@ contract TeacherManagement is AccessControl {
     }
 
     /** Modifiers */
+    // This modifier is used to check if the caller is an authorized teacher.
     modifier onlyAuthorizedTeacher(address _teacherAddress) {
         bool isTeacherAndSelf = teachers[msg.sender].exists &&
             msg.sender == _teacherAddress;
@@ -82,6 +84,7 @@ contract TeacherManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if the caller is a teacher.
     modifier onlyTeacher() {
         bool isTeacher = teachers[msg.sender].exists;
         bool isOwner = msg.sender == owner();
@@ -92,6 +95,7 @@ contract TeacherManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided classes not empty.
     modifier provideClasses(uint16[] memory _classes) {
         if (_classes.length == 0) {
             revert NoClassesProvided();
@@ -99,6 +103,7 @@ contract TeacherManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided courses not empty.
     modifier provideCourses(uint256[] memory _courses) {
         if (_courses.length == 0) {
             revert NoCoursesProvided();
@@ -106,6 +111,7 @@ contract TeacherManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided modules not empty.
     modifier provideModules(uint8[] memory _modules) {
         if (_modules.length == 0) {
             revert NoModulesProvided();
@@ -113,6 +119,7 @@ contract TeacherManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided teachers not empty.
     modifier provideTeachers(address[] memory _teachers) {
         if (_teachers.length == 0) {
             revert NoTeachersProvided();
@@ -120,6 +127,7 @@ contract TeacherManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if teacher exists.
     modifier requireAssignedTeacher(address _teacherAddress) {
         if (!teachers[_teacherAddress].exists) {
             revert TeacherNotFound(_teacherAddress);
@@ -128,7 +136,7 @@ contract TeacherManagement is AccessControl {
     }
 
     /** Management Functions */
-    // Teacher
+    // This function is used to delete teachers from the contract in batch.
     function deleteTeachers(
         address[] memory _teachers
     )
@@ -178,6 +186,7 @@ contract TeacherManagement is AccessControl {
         }
     }
 
+    // This function is used to register teachers in the contract in batch.
     function registerTeachers(
         address[] memory _teachers,
         uint16[] memory _classes
@@ -224,6 +233,7 @@ contract TeacherManagement is AccessControl {
         }
     }
 
+    // This function is used to update a teacher.
     function updateTeacher(
         address _teacherAddress,
         uint16 _newClassID
@@ -239,7 +249,7 @@ contract TeacherManagement is AccessControl {
         _teacherToUpdate.class = _newClassID;
     }
 
-    // Course
+    // This function is used to delete courses from the contract in batch.
     function deleteCourses(
         uint256[] memory _courses,
         address _teacherAddress
@@ -262,6 +272,7 @@ contract TeacherManagement is AccessControl {
         batchDeleteCourses(_courses, _teacherAddress);
     }
 
+    // This function is used to register courses in the contract in batch.
     function registerCourse(
         address _teacherAddress,
         uint256[] memory _courses,
@@ -315,7 +326,8 @@ contract TeacherManagement is AccessControl {
     }
 
     /** Getter Functions */
-    // Course
+    // These functions are used to get information from the contract.
+    // For courses.
     function getAllCoursesByTeacher(
         address _teacherAddress
     ) external view validAddress(_teacherAddress) returns (uint256[] memory) {
@@ -334,7 +346,7 @@ contract TeacherManagement is AccessControl {
         return courseID[_teacherAddress].length;
     }
 
-    // Teacher
+    // For teachers.
     function getAllTeachers() external view returns (address[] memory) {
         return teacherKeys;
     }
@@ -355,6 +367,7 @@ contract TeacherManagement is AccessControl {
     }
 
     /** Utility Functions */
+    // These functions are used to add or remove courses from the contract.
     function addCourseToTeacher(
         address _teacherAddress,
         uint256 _courseID
@@ -400,6 +413,7 @@ contract TeacherManagement is AccessControl {
     }
 
     /** Injection Functions */
+    // This function is used to update the student contract address.
     function updateStudentContract(
         address _newStudentContractAddress
     ) external onlyOwner validAddress(_newStudentContractAddress) {
@@ -407,6 +421,7 @@ contract TeacherManagement is AccessControl {
     }
 
     /** Interface Functions */
+    // These functions are used to interact with the contract from outside. (May be deprecated, but are still used for now.)
     function doesCourseExist(uint256 _courseID) external view returns (bool) {
         return courses[_courseID].exists;
     }

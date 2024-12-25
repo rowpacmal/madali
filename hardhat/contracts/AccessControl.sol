@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
+// Import OpenZeppelin contract, Ownable, for ownership management.
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 abstract contract AccessControl is Ownable {
@@ -25,12 +26,15 @@ abstract contract AccessControl is Ownable {
     constructor() Ownable(msg.sender) {}
 
     /** Modifiers */
+    // Modifier to check if the address is valid.
     modifier validAddress(address _address) {
         if (_address == address(0)) {
             revert ZeroAddressNotAllowed();
         }
         _;
     }
+
+    // Modifier to check if the account is locked.
     modifier whenNotLocked() {
         if (locked[msg.sender]) {
             revert AccountLocked(msg.sender);
@@ -40,6 +44,7 @@ abstract contract AccessControl is Ownable {
         locked[msg.sender] = false;
     }
 
+    // Modifier to check if the contract is paused.
     modifier whenNotPaused() {
         if (paused) {
             revert ContractIsPaused();
@@ -53,11 +58,13 @@ abstract contract AccessControl is Ownable {
     }
 
     /** Access Control Functions */
+    // Function to pause the contract.
     function pause() external virtual onlyOwner whenNotPaused whenNotLocked {
         paused = true;
         emit ContractPaused();
     }
 
+    // Function to unpause the contract.
     function unpause() external virtual onlyOwner whenNotLocked {
         if (!paused) {
             revert ContractIsNotPaused();
@@ -68,6 +75,7 @@ abstract contract AccessControl is Ownable {
     }
 
     /** Getter Functions */
+    // Function to check if the contract is paused.
     function isPaused() external view virtual returns (bool) {
         return paused;
     }

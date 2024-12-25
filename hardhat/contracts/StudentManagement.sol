@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
+// Import custom AccessControl contract, and the teacher management contract interface.
 import "./AccessControl.sol";
 import "./interfaces/ITeacherManagement.sol";
 
@@ -60,6 +61,7 @@ contract StudentManagement is AccessControl {
     }
 
     /** Modifiers */
+    // This modifier is used to check if the caller is an student. (Not used , and may be deprecated.)
     modifier onlyStudent() {
         bool isStudent = students[msg.sender].exists;
         bool isTeacher = teacherContract.doesTeacherExist(msg.sender);
@@ -71,6 +73,7 @@ contract StudentManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if the caller is an teacher.
     modifier onlyTeacher() {
         bool isTeacher = teacherContract.doesTeacherExist(msg.sender);
         bool isAdmin = msg.sender == owner();
@@ -81,6 +84,7 @@ contract StudentManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided classes not empty.
     modifier provideClasses(uint16[] memory _classes) {
         if (_classes.length == 0) {
             revert NoClassesProvided();
@@ -88,6 +92,7 @@ contract StudentManagement is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided students not empty.
     modifier provideStudents(address[] memory _students) {
         if (_students.length == 0) {
             revert NoStudentsProvided();
@@ -96,7 +101,7 @@ contract StudentManagement is AccessControl {
     }
 
     /** Management Functions */
-    // Students
+    // This function is used to delete students from the contract in batch.
     function deleteStudents(
         address[] memory _students,
         uint16 _classID
@@ -107,13 +112,16 @@ contract StudentManagement is AccessControl {
         whenNotLocked
         provideStudents(_students)
     {
+        // Check if there is no students to delete.
         if (studentKeys[_classID].length == 0) {
             revert NoStudentsToDelete();
         }
 
+        // Call the batch delete students function.
         batchDeleteStudents(_students, _classID);
     }
 
+    // This function is used to register students to the contract in batch.
     function registerStudents(
         address[] memory _students,
         uint16 _classID
@@ -124,34 +132,41 @@ contract StudentManagement is AccessControl {
         whenNotLocked
         provideStudents(_students)
     {
+        // Loop through and register the students.
         for (uint256 i; i < _students.length; ++i) {
             address _studentAddress = _students[i];
 
+            // Check if the student address is not a zero address.
             if (_studentAddress == address(0)) {
                 emit StudentAdditionFailed_ZeroAddress();
 
                 continue;
             }
 
+            // Check if the student already exists.
             if (students[_studentAddress].exists) {
                 emit StudentAdditionFailed_AlreadyExists(_studentAddress);
 
                 continue;
             }
 
+            // Register the student.
             students[_studentAddress] = Student({
                 key: _studentAddress,
                 exists: true,
                 class: _classID
             });
 
+            // Add the student to the students array.
             studentKeys[_classID].push(_studentAddress);
             studentIndex[_studentAddress] = studentKeys[_classID].length - 1;
 
+            // Emit the student registered event.
             emit StudentRegistered(_studentAddress);
         }
     }
 
+    // This function is used to update a student.
     function updateStudent(
         address _studentAddress,
         uint16 _oldClassID,
@@ -163,12 +178,15 @@ contract StudentManagement is AccessControl {
         whenNotLocked
         validAddress(_studentAddress)
     {
+        // Check if the student exists.
         if (!students[_studentAddress].exists) {
             revert StudentNotFound(_studentAddress);
         }
 
+        // Update the student's class.
         students[_studentAddress].class = _newClassID;
 
+        // Update the students array.
         address _lastStudentKey = studentKeys[_oldClassID][
             studentKeys[_oldClassID].length - 1
         ];
@@ -181,40 +199,49 @@ contract StudentManagement is AccessControl {
         studentKeys[_newClassID].push(_studentAddress);
         studentIndex[_studentAddress] = studentKeys[_newClassID].length - 1;
 
+        // Emit the student updated event.
         emit StudentUpdated(_studentAddress);
     }
 
-    // Class
+    // This function is used to add classes to the contract in batch.
     function addClass(
         uint16[] memory _classes
     ) external onlyOwner whenNotPaused whenNotLocked provideClasses(_classes) {
+        // Loop through and add the classes.
         for (uint256 i = 0; i < _classes.length; ++i) {
             uint16 _classID = _classes[i];
 
+            // Check if the class already exists.
             if (classes[_classID].exists) {
                 emit ClassAdditionFailed_AlreadyExists(_classID);
 
                 continue;
             }
 
+            // Add the class.
             Class storage _newClass = classes[_classID];
             _newClass.id = _classID;
             _newClass.exists = true;
 
+            // Add the class to the classes array.
             classID.push(_classID);
             classIndex[_classID] = classID.length - 1;
 
+            // Emit the class created event.
             emit ClassCreated(_classID);
         }
     }
 
+    // This function is used to delete classes from the contract in batch.
     function deleteClasses(
         uint16[] memory _classes
     ) external onlyOwner whenNotPaused whenNotLocked provideClasses(_classes) {
+        // Check if there is no classes to delete.
         if (classID.length == 0) {
             revert NoClassesToDelete();
         }
 
+        // Loop through and delete the classes.
         for (uint256 i = 0; i < _classes.length; ++i) {
             uint16 _classID = _classes[i];
 
@@ -235,23 +262,27 @@ contract StudentManagement is AccessControl {
             classID[_classIndex] = _lastClassID;
             classID.pop();
 
+            // Delete class index from the classIndex array.
             delete classIndex[_classID];
 
-            // Delete all student data from the class.
+            // Check if there are any students to delete in the class.
             if (studentKeys[_classID].length == 0) {
                 emit StudentDeletionFailed_NoStudentsToDelete();
             } else {
+                // Call the batch delete students function.
                 batchDeleteStudents(studentKeys[_classID], _classID);
             }
 
             delete studentKeys[_classID];
 
+            // Emit the class deleted event.
             emit ClassDeleted(_classID);
         }
     }
 
     /** Getter Functions */
-    // Course
+    // These functions are used to get data from the contract.
+    // For classes.
     function getAllClasses() external view returns (uint16[] memory) {
         return classID;
     }
@@ -260,7 +291,7 @@ contract StudentManagement is AccessControl {
         return classID.length;
     }
 
-    // Student
+    // For students.
     function getAllStudents(
         uint16 _classID
     ) external view returns (address[] memory) {
@@ -278,25 +309,30 @@ contract StudentManagement is AccessControl {
     }
 
     /** Utility Functions */
+    // This function is used to delete students from the contract in batch.
     function batchDeleteStudents(
         address[] memory _students,
         uint16 _classID
     ) private {
+        // Loop through and delete the students.
         for (uint256 i = 0; i < _students.length; ++i) {
             address _studentAddress = _students[i];
 
+            // Check if the student address is not a zero address.
             if (_studentAddress == address(0)) {
                 emit StudentDeletionFailed_ZeroAddress();
 
                 continue;
             }
 
+            // Check if the student exists.
             if (!students[_studentAddress].exists) {
                 emit StudentDeletionFailed_NotFound(_studentAddress);
 
                 continue;
             }
 
+            // Check if the student is enrolled in the class.
             if (students[_studentAddress].class != _classID) {
                 emit StudentDeletionFailed_NotEnrolledInClass(
                     _studentAddress,
@@ -306,8 +342,10 @@ contract StudentManagement is AccessControl {
                 continue;
             }
 
+            // Delete student data.
             delete students[_studentAddress];
 
+            // Delete student from the students array.
             address _lastStudentKey = studentKeys[_classID][
                 studentKeys[_classID].length - 1
             ];
@@ -317,13 +355,16 @@ contract StudentManagement is AccessControl {
             studentKeys[_classID][_studentIndex] = _lastStudentKey;
             studentKeys[_classID].pop();
 
+            // Delete student index from the studentIndex array.
             delete studentIndex[_studentAddress];
 
+            // Emit the student deleted event.
             emit StudentDeleted(_studentAddress);
         }
     }
 
     /** Injection Functions */
+    // This function is used to update the teacher contract address.
     function updateTeacherContract(
         address _newTeacherContractAddress
     ) external onlyOwner validAddress(_newTeacherContractAddress) {
@@ -331,6 +372,7 @@ contract StudentManagement is AccessControl {
     }
 
     /** Interface Functions */
+    // These functions are used to check if a class or student exists in the contract from outside. (May be deprecated, but are still used for now.)
     function doesClassExist(uint16 _classID) external view returns (bool) {
         return classes[_classID].exists;
     }

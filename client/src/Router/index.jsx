@@ -5,6 +5,7 @@ import Admin from '../pages/Admin';
 import Teacher from '../pages/Teacher';
 import Student from '../pages/Student';
 
+// The Router component is used to handle the routing and rendering of the different pages.
 function Router() {
   return (
     <BrowserRouter>

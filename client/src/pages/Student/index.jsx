@@ -6,6 +6,7 @@ import { AppContext } from '../../contexts/AppContext';
 import GradeTab from '../../components/ui/Student/GradeTab';
 import BadgeTab from '../../components/ui/Student/BadgeTab';
 
+// This is the student page for viewing grades and badges.
 function Student() {
   const navigate = useNavigate();
   const { account } = useContext(AppContext);

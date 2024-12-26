@@ -1,5 +1,6 @@
 import style from './style.module.css';
 
+// This is a placeholder component for the home page.
 function Home() {
   return (
     <>

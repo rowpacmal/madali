@@ -2,12 +2,13 @@ import { useContext, useEffect, useState } from 'react';
 import { UserRoleContext } from '../../contexts/UserRoleContext';
 import { useNavigate } from 'react-router-dom';
 import ClassTab from '../../components/ui/Admin/ClassTab';
-
 import style from './style.module.css';
 import { AppContext } from '../../contexts/AppContext';
 import TeacherTab from '../../components/ui/Admin/TeacherTab';
 import StudentTab from '../../components/ui/Admin/StudentTab';
 
+// This is the admin page for creating classes, teachers, and students.
+// Users that are not admins are redirected to the home page.
 function Admin() {
   const navigate = useNavigate();
   const { account } = useContext(AppContext);
@@ -29,6 +30,7 @@ function Admin() {
       {userRole === 'Admin' && (
         <>
           <div className={style.tabs}>
+            {/* The overview tab is not yet implemented. It's supposed to be a overview of the contracts status and extra admin management. But these are not necessary for the project to work, and will be improved upon at a later stage. */}
             {/* <button
               onClick={() => setTab('overview')}
               className={handleButtonStyle('overview')}

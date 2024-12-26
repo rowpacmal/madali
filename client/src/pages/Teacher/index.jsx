@@ -6,6 +6,7 @@ import { AppContext } from '../../contexts/AppContext';
 import CourseTab from '../../components/ui/Teacher/CourseTab';
 import GradeTab from '../../components/ui/Teacher/GradeTab';
 
+// This is the teacher page for viewing and creating courses and grades.
 function Teacher() {
   const navigate = useNavigate();
   const { account } = useContext(AppContext);
@@ -27,6 +28,7 @@ function Teacher() {
       {userRole === 'Teacher' && (
         <>
           <div className={style.tabs}>
+            {/* This is the overview tab. It's not yet implemented. It's supposed to be a overview of the teachers status. But these are not necessary for the project to work, and will be improved upon at a later stage. */}
             {/* <button
               onClick={() => setTab('overview')}
               className={handleButtonStyle('overview')}

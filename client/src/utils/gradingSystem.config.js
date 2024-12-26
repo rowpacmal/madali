@@ -1,3 +1,5 @@
+// Configuration for the GradingSystem contract.
+// This file contains the name, address, and ABI of the contract.
 const gradingSystem = {
   name: 'GradingSystem',
   address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',

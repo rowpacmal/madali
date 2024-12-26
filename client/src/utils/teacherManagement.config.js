@@ -1,3 +1,5 @@
+// Configuration for the TeacherManagement contract.
+// This file contains the name, address and ABI for the contract.
 const teacherManagement = {
   name: 'TeacherManagement',
   address: '0xB7A5bd0345EF1Cc5E66bf61BdeC17D2461fBd968',

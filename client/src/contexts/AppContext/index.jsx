@@ -20,10 +20,12 @@ function AppProvider({ children }) {
       setIsConnecting(true);
 
       try {
+        // Connect wallet
         const newProvider = new ethers.BrowserProvider(ethereum);
         const accounts = await newProvider.send('eth_requestAccounts', []);
         const newSigner = await newProvider.getSigner();
 
+        // Set the 'global' state.
         setProvider(newProvider);
         setSigner(newSigner);
         setAccount(accounts[0]);

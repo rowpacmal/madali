@@ -2,9 +2,10 @@ import { Link, Outlet } from 'react-router-dom';
 import Navigation from '../components/ui/Navigation';
 import ConnectWalletButton from '../components/ui/ConnectWalletButton';
 import Plant2 from '../components/icons/Plant2';
-
 import style from './style.module.css';
 
+// This is the main layout of the app.
+// It contains header, navigation bar, main content and footer.
 function Layout() {
   return (
     <>

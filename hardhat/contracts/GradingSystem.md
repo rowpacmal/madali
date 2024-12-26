@@ -1,4 +1,4 @@
-# Documentation for GradingSystem Solidity Contract
+# Grading System Contract Documentation
 
 The **GradingSystem** contract is designed to manage grades for students and teachers within a decentralized education platform.
 

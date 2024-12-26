@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
+// Import custom AccessControl contract, and the student and teacher contract interfaces.
 import "./AccessControl.sol";
 import "./interfaces/IStudentManagement.sol";
 import "./interfaces/ITeacherManagement.sol";
@@ -66,6 +67,7 @@ contract GradingSystem is AccessControl {
     }
 
     /** Modifiers */
+    // This modifier is used to check if the caller is an authorized student. (Not used , and may be deprecated.)
     modifier onlyAuthorizedStudent(address _studentAddress) {
         bool isStudentAndSelf = studentContract.doesStudentExist(msg.sender) &&
             msg.sender == _studentAddress;
@@ -78,6 +80,7 @@ contract GradingSystem is AccessControl {
         _;
     }
 
+    // This modifier is used to check if the caller is an authorized teacher.
     modifier onlyAuthorizedTeacher(address _teacherAddress) {
         bool isTeacherAndSelf = teacherContract.doesTeacherExist(msg.sender) &&
             msg.sender == _teacherAddress;
@@ -89,6 +92,7 @@ contract GradingSystem is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided grades is not empty.
     modifier provideGrades(uint8[] memory _grades) {
         if (_grades.length == 0) {
             revert NoGradesProvided();
@@ -96,6 +100,7 @@ contract GradingSystem is AccessControl {
         _;
     }
 
+    // This modifier is used to check if provided students is not empty.
     modifier provideStudents(address[] memory _students) {
         if (_students.length == 0) {
             revert NoStudentsProvided();
@@ -103,6 +108,7 @@ contract GradingSystem is AccessControl {
         _;
     }
 
+    // This modifier is used to check if a grade is already assigned/exists.
     modifier requireAssignedGrade(uint256 _gradeID) {
         if (!grades[_gradeID].exists) {
             revert GradeNotFound(_gradeID);
@@ -111,7 +117,7 @@ contract GradingSystem is AccessControl {
     }
 
     /** Management Functions */
-    // Grade
+    // This function is used to add grades to students.
     function addGrades(
         address[] memory _students,
         uint8[] memory _grades,
@@ -125,6 +131,7 @@ contract GradingSystem is AccessControl {
         provideStudents(_students)
         provideGrades(_grades)
     {
+        // Check if the number of students and grades provided are the same length.
         if (_students.length != _grades.length) {
             revert StudentsGradesLengthMismatch(
                 _students.length,
@@ -132,24 +139,29 @@ contract GradingSystem is AccessControl {
             );
         }
 
+        // Loop through and add the grades.
         for (uint256 i; i < _students.length; ++i) {
             address _studentAddress = _students[i];
 
+            // Check if the student address is not a zero address.
             if (_studentAddress == address(0)) {
                 emit GradeAdditionFailed_ZeroAddress();
 
                 continue;
             }
 
+            // Check if the student exists.
             if (!studentContract.doesStudentExist(_studentAddress)) {
                 emit GradeAdditionFailed_StudentNotFound(_studentAddress);
 
                 continue;
             }
 
+            // Get the current grade ID and then increment it.
             uint256 _gradeID = gradeIDCounter;
             ++gradeIDCounter;
 
+            // Add the grade.
             grades[_gradeID] = Grade({
                 student: _studentAddress,
                 teacher: msg.sender,
@@ -160,13 +172,16 @@ contract GradingSystem is AccessControl {
                 exists: true
             });
 
+            // Add the grade ID to the student's list of grades.
             gradeID[_studentAddress].push(_gradeID);
             gradeIndex[_gradeID] = gradeID[_studentAddress].length - 1;
 
+            // Emit the event.
             emit GradeAdded(_studentAddress, _gradeID);
         }
     }
 
+    // This function is used to delete a grade.
     function deleteGrade(
         uint256 _gradeID
     )
@@ -176,10 +191,13 @@ contract GradingSystem is AccessControl {
         whenNotLocked
         requireAssignedGrade(_gradeID)
     {
+        // Get the student address.
         address _studentAddress = grades[_gradeID].student;
 
+        // Delete the grade.
         delete grades[_gradeID];
 
+        // Remove the grade ID from the student's list of grades.
         uint256 _lastGradeID = gradeID[_studentAddress][
             gradeID[_studentAddress].length - 1
         ];
@@ -189,11 +207,14 @@ contract GradingSystem is AccessControl {
         gradeID[_studentAddress][_gradeIndex] = _lastGradeID;
         gradeID[_studentAddress].pop();
 
+        // Delete the grade index.
         delete gradeIndex[_gradeID];
 
+        // Emit the event.
         emit GradeDeleted(_studentAddress, _gradeID);
     }
 
+    // This function is used to update a grade.
     function updateGrade(
         uint256 _gradeID,
         uint8 _newGrade
@@ -205,35 +226,41 @@ contract GradingSystem is AccessControl {
         whenNotPaused
         whenNotLocked
     {
+        // Update the grade.
         Grade storage _gradeToUpdate = grades[_gradeID];
         uint8 _oldGrade = _gradeToUpdate.grade;
 
         _gradeToUpdate.grade = _newGrade;
 
+        // Emit the event.
         emit GradeUpdated(_gradeID, _oldGrade, _newGrade);
     }
 
     /** Getter Functions */
-    // Grade
+    // These functions are used to get information from the contract.
+    // This function is used to get all the grades by a student.
     function getAllGradesByStudent(
         address _studentAddress
     ) external view validAddress(_studentAddress) returns (uint256[] memory) {
         return gradeID[_studentAddress];
     }
 
+    // This function is used to get a grade.
     function getGrade(
         uint256 _gradeID
     ) external view requireAssignedGrade(_gradeID) returns (Grade memory) {
         return grades[_gradeID];
     }
 
+    // This function is used to get the total number of grades by a student.
     function getTotalGradesByStudent(
         address _studentAddress
     ) external view validAddress(_studentAddress) returns (uint256) {
         return gradeID[_studentAddress].length;
     }
 
-    // User Role
+    /** Utility Functions */
+    // This function is used to get the role of a user. (Would like to make this deprecated, and use a better system in the future.)
     function getUserRole(
         address _userAddress
     ) external view returns (address, UserRole) {
@@ -263,6 +290,7 @@ contract GradingSystem is AccessControl {
     }
 
     /** Injection Functions */
+    // This function is used to update the student and teacher contracts.
     function updateStudentAndTeacherContracts(
         address _newStudentContractAddress,
         address _newTeacherContractAddress
@@ -277,6 +305,7 @@ contract GradingSystem is AccessControl {
     }
 
     /** Interface Functions */
+    // These functions are used to check if a grade exists in the contract from outside.
     function doesGradeExist(uint256 _gradeID) external view returns (bool) {
         return grades[_gradeID].exists;
     }

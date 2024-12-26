@@ -1,13 +1,24 @@
-# Sample Hardhat Project
+# Hardhat Environment for the Madali Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+This folder serves as the development Hardhat environment for the Madali project. It provides a local testnet for testing and development of the dApp and its features.
 
-Try running some of the following tasks:
+---
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
+### Running Tests and Viewing Coverage
+
+To run tests and generate coverage reports, execute the following commands:
+
+```bash
+npm test
+npm run coverage
+```
+
+---
+
+### Starting the Local Testnet
+
+To start the local testnet environment, use:
+
+```bash
+npm start
 ```

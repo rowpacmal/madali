@@ -5,6 +5,8 @@ import { UserRoleContext } from '../../../contexts/UserRoleContext';
 
 import style from './style.module.css';
 
+// This component is used to display the navigation bar.
+// It changes based on the user's role.
 function Navigation() {
   const { account } = useContext(AppContext);
   const { userRole } = useContext(UserRoleContext);

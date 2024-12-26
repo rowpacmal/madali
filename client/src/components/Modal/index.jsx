@@ -1,7 +1,10 @@
 import style from './style.module.css';
 
+// This is a simple modal component.
+// It is used to display content in a modal.
 function Modal({ children, title, subTitle, setShowModal }) {
   const handleBackgroundClick = (e) => {
+    // Close modal when clicking on the background.
     if (e.target.id === 'background') {
       setShowModal(false);
     }

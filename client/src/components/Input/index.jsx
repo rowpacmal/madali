@@ -1,5 +1,6 @@
 import style from './style.module.css';
 
+// This is a simple input component.
 function Input({ type = 'text', placeholder, label, value, onChange }) {
   return (
     <label className={style.label}>

@@ -1,7 +1,10 @@
 import Form from '../../Form';
-
 import style from './style.module.css';
 
+// This component is used to manage a list of objects.
+// It is used to create, update, delete and view objects.
+// It's customizable and reusable.
+// it uses a special library.jsx file to handle the form and list components layout and data.
 function Management({
   list,
   library,
@@ -17,6 +20,7 @@ function Management({
   handleOnDelete,
   handleOnUpdate,
 }) {
+  // Handle form inputs on change.
   function handleInputOnChange(index, field, value) {
     setFormInputs((prevState) =>
       prevState.map((c) => {
@@ -28,6 +32,7 @@ function Management({
     );
   }
 
+  // Handle selections on change.
   function handleSelectionOnChange(index, value) {
     setSelections((prevState) => {
       return {
@@ -37,14 +42,17 @@ function Management({
     });
   }
 
+  // Handle add more input items to the form.
   function handleAddInput() {
     setFormInputs((prevState) => [...prevState, library.createInputObject()]);
   }
 
+  // Handle delete input item from the form.
   function handleDeleteInput(index) {
     setFormInputs((prevState) => prevState.filter((c) => c.index !== index));
   }
 
+  // Handle select all selections.
   function handleSelectAllSelections(e) {
     const { checked } = e.target;
 
@@ -65,6 +73,8 @@ function Management({
     }
   }
 
+  // Get selection mode.
+  // It's used to determine if the user can select more than one item for certain actions.
   function getSelectionMode(mode) {
     switch (mode) {
       case 'single':

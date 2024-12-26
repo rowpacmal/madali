@@ -1,9 +1,7 @@
 import { useContext } from 'react';
 import { AppContext } from '../../../contexts/AppContext';
-import { ClipboardTextFilled } from '../../icons/ClipboardText';
 
-import style from './style.module.css';
-
+// This component is used to display the connect wallet button.
 function ConnectWalletButton() {
   const { account, isConnecting, connectWallet } = useContext(AppContext);
 

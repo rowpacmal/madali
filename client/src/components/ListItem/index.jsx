@@ -1,5 +1,6 @@
 import style from './style.module.css';
 
+// This is a simple list item component.
 function ListItem({ children, label }) {
   return (
     <div className={style.container}>

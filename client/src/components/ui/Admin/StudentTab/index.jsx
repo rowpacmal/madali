@@ -6,6 +6,7 @@ import library from './library';
 import Student from '../../../../model/Student';
 import style from './style.module.css';
 
+// This is the student tab, which is used to manage students, create new students, and delete students.
 function StudentTab() {
   const {
     studentContract,
@@ -27,6 +28,7 @@ function StudentTab() {
     handleOnRefresh();
   }, [studentContract]);
 
+  // This is the function that is called when the user clicks the submit button.
   async function handleOnSubmit() {
     if (!classID) {
       console.error('No class ID provided.');
@@ -59,6 +61,7 @@ function StudentTab() {
     }
   }
 
+  // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh(classIDValue = null) {
     const tempStudents = [];
     const tempSelections = {};
@@ -92,6 +95,7 @@ function StudentTab() {
     setClassID(classIDData);
   }
 
+  // This is the function that is called when the user clicks the delete button.
   async function handleOnDelete() {
     console.log(selections);
 

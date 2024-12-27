@@ -8,6 +8,7 @@ import useTeacherManagement from '../../../../hooks/useTeacherManagement';
 import GradeItem from '../GradeItem';
 import ProgressBar from '../../../ProgressBar';
 
+// This component is used to display a modal for grading a student.
 function GradeModal({ data, course, courseName, setShowModal }) {
   const { gradingContract, getAllGradesByStudent, getGrade, addGrades } =
     useGradingSystem();
@@ -28,6 +29,7 @@ function GradeModal({ data, course, courseName, setShowModal }) {
     [gradingContract]
   );
 
+  // This is used to update the progress bar.
   useEffect(() => {
     if (displayProgress < gradeProgress) {
       const timeout = setTimeout(() => {
@@ -38,6 +40,7 @@ function GradeModal({ data, course, courseName, setShowModal }) {
     }
   }, [displayProgress, gradeProgress]);
 
+  // This is the function that is called when the user clicks the submit button.
   async function handleOnSubmit() {
     const courseID = Number(course);
     let gradeToAdd = 0;
@@ -86,6 +89,7 @@ function GradeModal({ data, course, courseName, setShowModal }) {
     }
   }
 
+  // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
     const courseID = Number(course);
     const gradesData = [];

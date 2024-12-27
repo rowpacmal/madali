@@ -4,9 +4,9 @@ import useTeacherService from '../../../../services/useTeacherService';
 import Management from '../../Management';
 import library from './library';
 import Teacher from '../../../../model/Teacher';
-
 import style from './style.module.css';
 
+// This is the teacher management tab, for creating and deleting teachers.
 function TeacherTab() {
   const { teacherContract, getAllTeachers, registerTeachers, deleteTeachers } =
     useTeacherManagement();
@@ -21,6 +21,7 @@ function TeacherTab() {
     handleOnRefresh();
   }, [teacherContract]);
 
+  // This function is called when the form is submitted.
   async function handleOnSubmit() {
     const teacherAddresses = formInputs.map((item) => item.walletAddress);
     const teacherClasses = formInputs.map((item) => Number(item.classID));
@@ -49,6 +50,7 @@ function TeacherTab() {
     }
   }
 
+  // This function is called when the refresh button is clicked or the page is reloaded.
   async function handleOnRefresh() {
     const tempTeachers = [];
     const tempSelections = {};
@@ -69,6 +71,7 @@ function TeacherTab() {
     setSelections(tempSelections);
   }
 
+  // This function is called when the delete button is clicked.
   async function handleOnDelete() {
     console.log(selections);
 

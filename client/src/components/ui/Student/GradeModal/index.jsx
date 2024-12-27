@@ -7,6 +7,7 @@ import GradeItem from '../GradeItem';
 import ProgressBar from '../../../ProgressBar';
 import { AppContext } from '../../../../contexts/AppContext';
 
+// This component is a modal that displays the grades of a student in a course.
 function GradeModal({ data, setShowModal }) {
   const { account } = useContext(AppContext);
   const { gradingContract, getAllGradesByStudent, getGrade } =
@@ -26,6 +27,7 @@ function GradeModal({ data, setShowModal }) {
     [gradingContract]
   );
 
+  // This is used to update the progress bar.
   useEffect(() => {
     if (displayProgress < gradeProgress) {
       const timeout = setTimeout(() => {
@@ -36,6 +38,7 @@ function GradeModal({ data, setShowModal }) {
     }
   }, [displayProgress, gradeProgress]);
 
+  // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
     const courseID = Number(data.id);
     const gradesData = [];

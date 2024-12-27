@@ -9,6 +9,7 @@ import useStudentService from '../../../../services/useStudentService';
 import useStudentManagement from '../../../../hooks/useStudentManagement';
 import GradeModal from '../GradeModal';
 
+// This is the teacher's grade tab, where the teacher can view and manage students course grades.
 function GradeTab() {
   const { account } = useContext(AppContext);
   const { studentContract, getAllStudents } = useStudentManagement();
@@ -28,6 +29,7 @@ function GradeTab() {
     handleOnRefresh();
   }, [teacherContract, studentContract]);
 
+  // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh(courseIDValue = null) {
     const tempStudents = [];
     const tempCourseNames = {};
@@ -71,6 +73,7 @@ function GradeTab() {
     setCourseName(tempCourseNames);
   }
 
+  // This is the function that is called when the user clicks the view button.
   function handleOnView(item) {
     setModalData(item);
     setShowModal(true);

@@ -9,6 +9,7 @@ import useStudentManagement from '../../../../hooks/useStudentManagement';
 import GradeModal from '../GradeModal';
 import useTeacherService from '../../../../services/useTeacherService';
 
+// This is the student's grade tab, where they can view their grades for each course.
 function GradeTab() {
   const { account } = useContext(AppContext);
   const { studentContract, getStudent } = useStudentManagement();
@@ -26,6 +27,7 @@ function GradeTab() {
     handleOnRefresh();
   }, [teacherContract, studentContract]);
 
+  // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
     const coursesTemp = [];
     const studentData = await getStudent(account);
@@ -53,6 +55,7 @@ function GradeTab() {
     setCourses(coursesTemp);
   }
 
+  // This is the function that is called when the user clicks the view button.
   function handleOnView(item) {
     setModalData(item);
     setShowModal(true);

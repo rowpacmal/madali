@@ -4,6 +4,7 @@ import useEducationCertificate from '../../../../hooks/useEducationCertificate';
 import axios from 'axios';
 import jsonServer from '../../../../utils/jsonServer.config';
 
+// This component is used to display a grade item in the grades modal.
 function GradeItem({ student, course, grade, style }) {
   const { updateGrade } = useGradingSystem();
   const {
@@ -21,6 +22,7 @@ function GradeItem({ student, course, grade, style }) {
     setEditing(renderGrades(grade.grade));
   }, [grade]);
 
+  // Check if the certificate is minted.
   useEffect(
     () => {
       (async () => {
@@ -39,6 +41,7 @@ function GradeItem({ student, course, grade, style }) {
     [certificateContract, grade]
   );
 
+  // Utility function to render the grade.
   function renderGrades(grade) {
     switch (grade) {
       case 6:
@@ -60,6 +63,7 @@ function GradeItem({ student, course, grade, style }) {
     }
   }
 
+  // Function to handle the save/update button.
   async function handleOnSave(id, grade) {
     if (id === null || id === undefined) return;
 
@@ -102,6 +106,7 @@ function GradeItem({ student, course, grade, style }) {
     setEditing(grade);
   }
 
+  // Function to handle the mint button.
   async function handleOnMint() {
     try {
       const response = await axios.get(`${jsonServer.url}/badges`);

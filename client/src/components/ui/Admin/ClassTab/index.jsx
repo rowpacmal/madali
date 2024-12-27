@@ -4,9 +4,9 @@ import useClassService from '../../../../services/useClassService';
 import Class from '../../../../model/Class';
 import Management from '../../Management';
 import library from './library';
-
 import style from './style.module.css';
 
+// This is the class management tab, for creating and deleting classes.
 function ClassTab() {
   const { studentContract, getAllClasses, registerClass, deleteClasses } =
     useStudentManagement();
@@ -21,6 +21,7 @@ function ClassTab() {
     handleOnRefresh();
   }, [studentContract]);
 
+  // This is the function that is called when the user clicks the submit button.
   async function handleOnSubmit() {
     const classIDs = formInputs.map((item) => Number(item.code));
 
@@ -41,6 +42,7 @@ function ClassTab() {
     }
   }
 
+  // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
     const tempClasses = [];
     const tempSelections = {};
@@ -61,6 +63,7 @@ function ClassTab() {
     setSelections(tempSelections);
   }
 
+  // This is the function that is called when the user clicks the delete button.
   async function handleOnDelete() {
     console.log(selections);
 

@@ -6,6 +6,7 @@ import useGradingSystem from '../../../../hooks/useGradingSystem';
 import useStudentManagement from '../../../../hooks/useStudentManagement';
 import BadgeModal from '../BadgeModal';
 
+// This is the student's badge tab, where they can view their badges/certificates NFTs.
 function BadgeTab() {
   const { account } = useContext(AppContext);
   const { certificateContract, getCertificate, getTotalCertificates } =
@@ -26,6 +27,7 @@ function BadgeTab() {
     [certificateContract, gradingContract]
   );
 
+  // This is used to refresh the badges when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
     const tempBadges = [];
     const studentData = await getStudent(account);
@@ -51,6 +53,7 @@ function BadgeTab() {
     setBadges(tempBadges);
   }
 
+  // This is the function that is called when the user clicks the a badge.
   function handleOnView(data) {
     setModalData(data);
     setShowModal(true);
@@ -62,6 +65,12 @@ function BadgeTab() {
         <header className={style.header}>
           <h2>Badge Collection</h2>
         </header>
+
+        <div className={style.refresh}>
+          <button type="button" onClick={handleOnRefresh}>
+            Refresh
+          </button>
+        </div>
 
         <div className={style.badges}>
           {badges.map((badge) => (

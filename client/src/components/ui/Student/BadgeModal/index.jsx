@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import Modal from '../../../Modal';
 import style from './style.module.css';
-
 import educationCertificate from '../../../../utils/educationCertificate.config';
 import useCourseService from '../../../../services/useCourseService';
 import useTeacherService from '../../../../services/useTeacherService';
 import useStudentService from '../../../../services/useStudentService';
 
+// This component is used to display a badge item in the badges modal.
 function ViewItem({ label, data }) {
   return (
     <li className={style.li}>
@@ -17,6 +17,7 @@ function ViewItem({ label, data }) {
   );
 }
 
+// This component is used to display a badge modal.
 function BadgeModal({ data, setShowModal }) {
   const { getCourse } = useCourseService();
   const { getTeacher } = useTeacherService();
@@ -25,6 +26,7 @@ function BadgeModal({ data, setShowModal }) {
   const [teacherName, setTeacherName] = useState('N/A');
   const [studentName, setStudentName] = useState('N/A');
 
+  // This is used to get the course name, teacher name, and student name.
   useEffect(
     () => {
       if (!data) return;
@@ -43,6 +45,7 @@ function BadgeModal({ data, setShowModal }) {
     [data]
   );
 
+  // Utility function to render the grade.
   function renderGrades(grade) {
     switch (grade) {
       case 6:

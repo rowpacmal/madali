@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useEducationCertificate from '../../../../hooks/useEducationCertificate';
 
+// This component is used to display a grade item in the students grades modal.
 function GradeItem({ grade, style }) {
   const { certificateContract, getCertificate, getTotalCertificates } =
     useEducationCertificate();
@@ -13,6 +14,7 @@ function GradeItem({ grade, style }) {
     setEditing(renderGrades(grade.grade));
   }, [grade]);
 
+  // Check if the certificate is minted.
   useEffect(
     () => {
       (async () => {
@@ -31,6 +33,7 @@ function GradeItem({ grade, style }) {
     [certificateContract, grade]
   );
 
+  // Utility function to render the grade.
   function renderGrades(grade) {
     switch (grade) {
       case 6:

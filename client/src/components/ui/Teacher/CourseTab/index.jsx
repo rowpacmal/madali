@@ -3,11 +3,11 @@ import useTeacherManagement from '../../../../hooks/useTeacherManagement';
 import useCourseService from '../../../../services/useCourseService';
 import Management from '../../Management';
 import library from './library';
-import Teacher from '../../../../model/Teacher';
 import { AppContext } from '../../../../contexts/AppContext';
 import style from './style.module.css';
 import Course from '../../../../model/Course';
 
+// This component is the teacher's course tab, for creating and managing courses.
 function CourseTab() {
   const { account } = useContext(AppContext);
   const {
@@ -27,6 +27,7 @@ function CourseTab() {
     handleOnRefresh();
   }, [teacherContract]);
 
+  // This function is called when the form is submitted.
   async function handleOnSubmit() {
     const teacherCourses = formInputs.map((item) => item.code);
     const courseClasses = formInputs.map((item) => Number(item.courseClass));
@@ -62,6 +63,7 @@ function CourseTab() {
     }
   }
 
+  // This function is called when the refresh button is clicked, or the page is reloaded.
   async function handleOnRefresh() {
     const tempCourses = [];
     const tempSelections = {};
@@ -82,6 +84,7 @@ function CourseTab() {
     setSelections(tempSelections);
   }
 
+  // This function is called when the delete button is clicked.
   async function handleOnDelete() {
     console.log(selections);
 

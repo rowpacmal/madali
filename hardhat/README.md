@@ -22,3 +22,9 @@ To start the local testnet environment, use:
 ```bash
 npm start
 ```
+
+To deploy the smart contracts, use:
+
+```bash
+npm run deploy
+```

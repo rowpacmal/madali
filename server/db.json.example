@@ -1,0 +1,67 @@
+{
+  "teachers": [
+    {
+      "id": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
+      "address": "John Doe Street 12",
+      "phoneNumber": "+55 555 555 555",
+      "role": "teacher",
+      "classID": "2401"
+    }
+  ],
+  "courses": [
+    {
+      "id": "240101",
+      "name": "Class 2024 A1, Swedish A",
+      "teacher": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "courseClass": 2401,
+      "modules": 10,
+      "startDate": "2024-01-01",
+      "endDate": "2025-01-01"
+    },
+    {
+      "id": "240102",
+      "name": "Class 2024 A1, Math A",
+      "teacher": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "courseClass": 2401,
+      "modules": 10,
+      "startDate": "2024-01-01",
+      "endDate": "2025-01-01"
+    },
+    {
+      "id": "240103",
+      "name": "Class 2024 A1, English A",
+      "teacher": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "courseClass": 2401,
+      "modules": 10,
+      "startDate": "2024-01-01",
+      "endDate": "2025-01-01"
+    }
+  ],
+  "classes": [
+    {
+      "id": "2402",
+      "name": "Class 2024 A2",
+      "year": "2024"
+    },
+    {
+      "id": "2401",
+      "name": "Class 2024 A1",
+      "year": "2024"
+    }
+  ],
+  "students": [
+    {
+      "id": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+      "firstName": "Billy",
+      "lastName": "Bobs",
+      "email": "billy.bobs.parent@example.com",
+      "address": "Billy Bobs Street 12",
+      "phoneNumber": "+55 555 555 555",
+      "role": "student",
+      "classID": 2401
+    }
+  ]
+}

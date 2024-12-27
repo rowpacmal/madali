@@ -108,19 +108,9 @@ function GradeItem({ student, course, grade, style }) {
 
   // Function to handle the mint button.
   async function handleOnMint() {
+    const imageURL = 'placeholder.png';
+
     try {
-      const response = await axios.get(`${jsonServer.url}/badges`);
-      const badges = await response.data;
-      let imageURL = '';
-
-      console.log(badges);
-
-      for (let badge of badges) {
-        if (Number(badge.course) === Number(course)) {
-          imageURL = badge.url;
-        }
-      }
-
       await mintCertificate(student, grade.id, course, imageURL);
     } catch (error) {
       console.log(error);
@@ -159,7 +149,7 @@ function GradeItem({ student, course, grade, style }) {
 
         <button
           type="button"
-          disabled={grade.id === null || isMinted}
+          disabled={grade.id === null || grade.grade === 1 || isMinted}
           onClick={() => handleOnMint()}
         >
           Mint

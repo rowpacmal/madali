@@ -69,7 +69,7 @@ function BadgeModal({ data, setShowModal }) {
 
   return (
     <Modal title="Badge Details" setShowModal={setShowModal}>
-      <img src={data.imageURL} alt="" className={style.image} />
+      <img src={`/${data.imageURL}`} alt="" className={style.image} />
 
       <div className={style.ulContainer}>
         <ul className={style.ul}>

@@ -63,17 +63,5 @@
       "role": "student",
       "classID": 2401
     }
-  ],
-  "badges": [
-    {
-      "course": "240101",
-      "url": "https://cdn-icons-png.flaticon.com/512/6024/6024706.png",
-      "id": "30d7"
-    },
-    {
-      "course": "240102",
-      "url": "https://cdn-icons-png.flaticon.com/512/6024/6024719.png",
-      "id": "925e"
-    }
   ]
 }

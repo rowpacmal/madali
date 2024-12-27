@@ -79,7 +79,11 @@ function BadgeTab() {
               className={style.badge}
               onClick={() => handleOnView(badge)}
             >
-              <img src={badge.imageURL} alt="Badge" className={style.img} />
+              <img
+                src={`/${badge.imageURL}`}
+                alt="Badge"
+                className={style.img}
+              />
             </div>
           ))}
         </div>

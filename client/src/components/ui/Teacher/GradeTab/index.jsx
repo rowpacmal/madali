@@ -22,6 +22,7 @@ function GradeTab() {
   const [courseID, setCourseID] = useState('');
   const [modalData, setModalData] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!teacherContract || !studentContract) return;
@@ -31,6 +32,8 @@ function GradeTab() {
 
   // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh(courseIDValue = null) {
+    setIsLoading(true);
+
     const tempStudents = [];
     const tempCourseNames = {};
     const coursesData = await getAllCoursesByTeacher(account);
@@ -71,6 +74,8 @@ function GradeTab() {
     setCourses(coursesData);
     setCourseID(courseIDData);
     setCourseName(tempCourseNames);
+
+    setIsLoading(false);
   }
 
   // This is the function that is called when the user clicks the view button.
@@ -86,40 +91,46 @@ function GradeTab() {
           <h2>Grade Management</h2>
         </header>
 
-        <div className={style.dropdown}>
-          <div className={style.selector}>
-            <label>Course Name (Course Code)</label>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <div className={style.dropdown}>
+              <div className={style.selector}>
+                <label>Course Name (Course Code)</label>
 
-            <select
-              value={courseID}
-              onChange={(e) => {
-                setCourseID(e.target.value);
-                handleOnRefresh(e.target.value);
-              }}
-            >
-              {courses.length > 0 ? (
-                <>
-                  {courses.map((item) => (
-                    <option key={item} value={item}>
-                      {courseName[item]} ({item})
+                <select
+                  value={courseID}
+                  onChange={(e) => {
+                    setCourseID(e.target.value);
+                    handleOnRefresh(e.target.value);
+                  }}
+                >
+                  {courses.length > 0 ? (
+                    <>
+                      {courses.map((item) => (
+                        <option key={item} value={item}>
+                          {courseName[item]} ({item})
+                        </option>
+                      ))}
+                    </>
+                  ) : (
+                    <option disabled selected>
+                      No courses found
                     </option>
-                  ))}
-                </>
-              ) : (
-                <option disabled selected>
-                  No courses found
-                </option>
-              )}
-            </select>
-          </div>
-        </div>
+                  )}
+                </select>
+              </div>
+            </div>
 
-        <Management
-          list={students}
-          library={library}
-          handleOnRefresh={handleOnRefresh}
-          handleOnView={handleOnView}
-        />
+            <Management
+              list={students}
+              library={library}
+              handleOnRefresh={handleOnRefresh}
+              handleOnView={handleOnView}
+            />
+          </>
+        )}
       </section>
 
       {showModal && (

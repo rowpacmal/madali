@@ -21,6 +21,7 @@ function StudentTab() {
   const [selections, setSelections] = useState({});
   const [classes, setClasses] = useState([]);
   const [classID, setClassID] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!studentContract) return;
@@ -63,6 +64,8 @@ function StudentTab() {
 
   // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh(classIDValue = null) {
+    setIsLoading(true);
+
     const tempStudents = [];
     const tempSelections = {};
     const classesData = await getAllClasses();
@@ -93,6 +96,8 @@ function StudentTab() {
 
     setClasses(classesData);
     setClassID(classIDData);
+
+    setIsLoading(false);
   }
 
   // This is the function that is called when the user clicks the delete button.
@@ -122,45 +127,51 @@ function StudentTab() {
         <h2>Student Management</h2>
       </header>
 
-      <div className={style.dropdown}>
-        <div className={style.selector}>
-          <label>Class Code</label>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <div className={style.dropdown}>
+            <div className={style.selector}>
+              <label>Class Code</label>
 
-          <select
-            value={classID}
-            onChange={(e) => {
-              setClassID(e.target.value);
-              handleOnRefresh(e.target.value);
-            }}
-          >
-            {classes.length > 0 ? (
-              <>
-                {classes.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
+              <select
+                value={classID}
+                onChange={(e) => {
+                  setClassID(e.target.value);
+                  handleOnRefresh(e.target.value);
+                }}
+              >
+                {classes.length > 0 ? (
+                  <>
+                    {classes.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </>
+                ) : (
+                  <option disabled selected>
+                    No classes found
                   </option>
-                ))}
-              </>
-            ) : (
-              <option disabled selected>
-                No classes found
-              </option>
-            )}
-          </select>
-        </div>
-      </div>
+                )}
+              </select>
+            </div>
+          </div>
 
-      <Management
-        list={students}
-        library={library}
-        formInputs={formInputs}
-        setFormInputs={setFormInputs}
-        selections={selections}
-        setSelections={setSelections}
-        handleOnSubmit={handleOnSubmit}
-        handleOnRefresh={handleOnRefresh}
-        handleOnDelete={handleOnDelete}
-      />
+          <Management
+            list={students}
+            library={library}
+            formInputs={formInputs}
+            setFormInputs={setFormInputs}
+            selections={selections}
+            setSelections={setSelections}
+            handleOnSubmit={handleOnSubmit}
+            handleOnRefresh={handleOnRefresh}
+            handleOnDelete={handleOnDelete}
+          />
+        </>
+      )}
     </section>
   );
 }

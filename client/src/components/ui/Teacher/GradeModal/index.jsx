@@ -18,6 +18,7 @@ function GradeModal({ data, course, courseName, setShowModal }) {
   const [gradeModule, setGradeModule] = useState('');
   const [gradeProgress, setGradeProgress] = useState(0);
   const [displayProgress, setDisplayProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(
     () => {
@@ -91,6 +92,8 @@ function GradeModal({ data, course, courseName, setShowModal }) {
 
   // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
+    setIsLoading(true);
+
     const courseID = Number(course);
     const gradesData = [];
     const gradeIDs = await getAllGradesByStudent(data.id);
@@ -133,6 +136,8 @@ function GradeModal({ data, course, courseName, setShowModal }) {
     console.log(maxModulesTemp);
 
     setGrades(maxModulesTemp);
+
+    setIsLoading(false);
   }
 
   return (
@@ -141,71 +146,77 @@ function GradeModal({ data, course, courseName, setShowModal }) {
       subTitle={`${courseName} (${course})`}
       setShowModal={setShowModal}
     >
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleOnSubmit();
-        }}
-      >
-        <div className={style.inputs}>
-          <Input
-            placeholder="Enter grade..."
-            label="Grade"
-            value={gradeScore}
-            onChange={(e) => setGradeScore(e.target.value)}
-          />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleOnSubmit();
+            }}
+          >
+            <div className={style.inputs}>
+              <Input
+                placeholder="Enter grade..."
+                label="Grade"
+                value={gradeScore}
+                onChange={(e) => setGradeScore(e.target.value)}
+              />
 
-          <Input
-            type="number"
-            placeholder="Enter module..."
-            label="Module"
-            value={gradeModule}
-            onChange={(e) => setGradeModule(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <button type="submit">Add Grade</button>
-        </div>
-      </Form>
-
-      <div className={style.progressContainer}>
-        <span>Student Progress: {displayProgress}%</span>
-
-        <ProgressBar progress={gradeProgress} />
-      </div>
-
-      <div className={style.ulContainer}>
-        <ul className={style.ul}>
-          <li className={style.liHeader}>
-            <div className={style.module}>
-              <span>Minted</span>
-
-              <span>Grade ID</span>
-
-              <span>Module</span>
-
-              <span>Grade</span>
+              <Input
+                type="number"
+                placeholder="Enter module..."
+                label="Module"
+                value={gradeModule}
+                onChange={(e) => setGradeModule(e.target.value)}
+              />
             </div>
 
-            <div className={style.buttons}>
-              <button type="button" onClick={handleOnRefresh}>
-                Refresh
-              </button>
+            <div>
+              <button type="submit">Add Grade</button>
             </div>
-          </li>
+          </Form>
 
-          {grades.map((grade, index) => (
-            <GradeItem
-              student={data.id}
-              course={course}
-              grade={grade}
-              key={index}
-              style={style}
-            />
-          ))}
-        </ul>
-      </div>
+          <div className={style.progressContainer}>
+            <span>Student Progress: {displayProgress}%</span>
+
+            <ProgressBar progress={gradeProgress} />
+          </div>
+
+          <div className={style.ulContainer}>
+            <ul className={style.ul}>
+              <li className={style.liHeader}>
+                <div className={style.module}>
+                  <span>Minted</span>
+
+                  <span>Grade ID</span>
+
+                  <span>Module</span>
+
+                  <span>Grade</span>
+                </div>
+
+                <div className={style.buttons}>
+                  <button type="button" onClick={handleOnRefresh}>
+                    Refresh
+                  </button>
+                </div>
+              </li>
+
+              {grades.map((grade, index) => (
+                <GradeItem
+                  student={data.id}
+                  course={course}
+                  grade={grade}
+                  key={index}
+                  style={style}
+                />
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
     </Modal>
   );
 }

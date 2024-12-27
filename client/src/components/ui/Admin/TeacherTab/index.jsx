@@ -14,6 +14,7 @@ function TeacherTab() {
   const [teachers, setTeachers] = useState([]);
   const [formInputs, setFormInputs] = useState([]);
   const [selections, setSelections] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!teacherContract) return;
@@ -52,6 +53,8 @@ function TeacherTab() {
 
   // This function is called when the refresh button is clicked or the page is reloaded.
   async function handleOnRefresh() {
+    setIsLoading(true);
+
     const tempTeachers = [];
     const tempSelections = {};
     const teacherAddresses = await getAllTeachers();
@@ -69,6 +72,8 @@ function TeacherTab() {
 
     setTeachers(tempTeachers);
     setSelections(tempSelections);
+
+    setIsLoading(false);
   }
 
   // This function is called when the delete button is clicked.
@@ -98,17 +103,23 @@ function TeacherTab() {
         <h2>Teacher Management</h2>
       </header>
 
-      <Management
-        list={teachers}
-        library={library}
-        formInputs={formInputs}
-        setFormInputs={setFormInputs}
-        selections={selections}
-        setSelections={setSelections}
-        handleOnSubmit={handleOnSubmit}
-        handleOnRefresh={handleOnRefresh}
-        handleOnDelete={handleOnDelete}
-      />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <Management
+            list={teachers}
+            library={library}
+            formInputs={formInputs}
+            setFormInputs={setFormInputs}
+            selections={selections}
+            setSelections={setSelections}
+            handleOnSubmit={handleOnSubmit}
+            handleOnRefresh={handleOnRefresh}
+            handleOnDelete={handleOnDelete}
+          />
+        </>
+      )}
     </section>
   );
 }

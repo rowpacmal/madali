@@ -20,6 +20,7 @@ function GradeTab() {
   const [courses, setCourses] = useState([]);
   const [modalData, setModalData] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!teacherContract || !studentContract) return;
@@ -29,6 +30,8 @@ function GradeTab() {
 
   // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
+    setIsLoading(true);
+
     const coursesTemp = [];
     const studentData = await getStudent(account);
     const teachersData = await getAllTeachers();
@@ -53,6 +56,8 @@ function GradeTab() {
     }
 
     setCourses(coursesTemp);
+
+    setIsLoading(false);
   }
 
   // This is the function that is called when the user clicks the view button.
@@ -68,12 +73,18 @@ function GradeTab() {
           <h2>Grades Overview</h2>
         </header>
 
-        <Management
-          list={courses}
-          library={library}
-          handleOnRefresh={handleOnRefresh}
-          handleOnView={handleOnView}
-        />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <Management
+              list={courses}
+              library={library}
+              handleOnRefresh={handleOnRefresh}
+              handleOnView={handleOnView}
+            />
+          </>
+        )}
       </section>
 
       {showModal && <GradeModal data={modalData} setShowModal={setShowModal} />}

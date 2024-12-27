@@ -25,6 +25,7 @@ function BadgeModal({ data, setShowModal }) {
   const [courseName, setCourseName] = useState('N/A');
   const [teacherName, setTeacherName] = useState('N/A');
   const [studentName, setStudentName] = useState('N/A');
+  const [isLoading, setIsLoading] = useState(false);
 
   // This is used to get the course name, teacher name, and student name.
   useEffect(
@@ -32,6 +33,8 @@ function BadgeModal({ data, setShowModal }) {
       if (!data) return;
 
       (async () => {
+        setIsLoading(true);
+
         const course = await getCourse(data.course);
         const teacher = await getTeacher(data.teacher);
         const student = await getStudent(data.student);
@@ -39,6 +42,8 @@ function BadgeModal({ data, setShowModal }) {
         setCourseName(course.name);
         setTeacherName(`${teacher.firstName} ${teacher.lastName}`);
         setStudentName(`${student.firstName} ${student.lastName}`);
+
+        setIsLoading(false);
       })();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,38 +74,51 @@ function BadgeModal({ data, setShowModal }) {
 
   return (
     <Modal title="Badge Details" setShowModal={setShowModal}>
-      <img src={`/${data.imageURL}`} alt="" className={style.image} />
-
-      <div className={style.ulContainer}>
-        <ul className={style.ul}>
-          <ViewItem
-            label="Contract Address"
-            data={educationCertificate.address}
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <img
+            src={`/${data.imageURL}`}
+            alt=""
+            className={style.image}
+            loading="lazy"
+            width="240"
+            height="240"
           />
 
-          <ViewItem label="Certificate ID" data={data.certificate} />
+          <div className={style.ulContainer}>
+            <ul className={style.ul}>
+              <ViewItem
+                label="Contract Address"
+                data={educationCertificate.address}
+              />
 
-          <ViewItem label="NFT Owner" data={data.owner} />
+              <ViewItem label="Certificate ID" data={data.certificate} />
 
-          <ViewItem label="Course" data={courseName} />
+              <ViewItem label="NFT Owner" data={data.owner} />
 
-          <ViewItem label="Course Code" data={data.course} />
+              <ViewItem label="Course" data={courseName} />
 
-          <ViewItem label="Teacher" data={teacherName} />
+              <ViewItem label="Course Code" data={data.course} />
 
-          <ViewItem label="Teacher Wallet" data={data.teacher} />
+              <ViewItem label="Teacher" data={teacherName} />
 
-          <ViewItem label="Student" data={studentName} />
+              <ViewItem label="Teacher Wallet" data={data.teacher} />
 
-          <ViewItem label="Student Wallet" data={data.student} />
+              <ViewItem label="Student" data={studentName} />
 
-          <ViewItem label="Grade ID" data={data.id} />
+              <ViewItem label="Student Wallet" data={data.student} />
 
-          <ViewItem label="Grade" data={renderGrades(data.grade)} />
+              <ViewItem label="Grade ID" data={data.id} />
 
-          <ViewItem label="Module" data={data.module} />
-        </ul>
-      </div>
+              <ViewItem label="Grade" data={renderGrades(data.grade)} />
+
+              <ViewItem label="Module" data={data.module} />
+            </ul>
+          </div>
+        </>
+      )}
     </Modal>
   );
 }

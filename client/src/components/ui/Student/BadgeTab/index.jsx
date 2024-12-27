@@ -16,6 +16,7 @@ function BadgeTab() {
   const [badges, setBadges] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(
     () => {
@@ -29,6 +30,8 @@ function BadgeTab() {
 
   // This is used to refresh the badges when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
+    setIsLoading(true);
+
     const tempBadges = [];
     const studentData = await getStudent(account);
     const totalCert = await getTotalCertificates();
@@ -51,6 +54,8 @@ function BadgeTab() {
     }
 
     setBadges(tempBadges);
+
+    setIsLoading(false);
   }
 
   // This is the function that is called when the user clicks the a badge.
@@ -66,27 +71,36 @@ function BadgeTab() {
           <h2>Badge Collection</h2>
         </header>
 
-        <div className={style.refresh}>
-          <button type="button" onClick={handleOnRefresh}>
-            Refresh
-          </button>
-        </div>
-
-        <div className={style.badges}>
-          {badges.map((badge) => (
-            <div
-              key={badge.certificate}
-              className={style.badge}
-              onClick={() => handleOnView(badge)}
-            >
-              <img
-                src={`/${badge.imageURL}`}
-                alt="Badge"
-                className={style.img}
-              />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <div className={style.refresh}>
+              <button type="button" onClick={handleOnRefresh}>
+                Refresh
+              </button>
             </div>
-          ))}
-        </div>
+
+            <div className={style.badges}>
+              {badges.map((badge) => (
+                <div
+                  key={badge.certificate}
+                  className={style.badge}
+                  onClick={() => handleOnView(badge)}
+                >
+                  <img
+                    src={`/${badge.imageURL}`}
+                    alt="Badge"
+                    className={style.img}
+                    loading="lazy"
+                    width="240"
+                    height="240"
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </section>
 
       {showModal && <BadgeModal data={modalData} setShowModal={setShowModal} />}

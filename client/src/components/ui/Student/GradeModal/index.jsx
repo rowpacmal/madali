@@ -16,6 +16,7 @@ function GradeModal({ data, setShowModal }) {
   const [grades, setGrades] = useState([]);
   const [gradeProgress, setGradeProgress] = useState(0);
   const [displayProgress, setDisplayProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(
     () => {
@@ -40,6 +41,8 @@ function GradeModal({ data, setShowModal }) {
 
   // This is the function that is called when the user clicks the refresh button, or the page is reloaded.
   async function handleOnRefresh() {
+    setIsLoading(true);
+
     const courseID = Number(data.id);
     const gradesData = [];
     const gradeIDs = await getAllGradesByStudent(account);
@@ -82,6 +85,8 @@ function GradeModal({ data, setShowModal }) {
     console.log(maxModulesTemp);
 
     setGrades(maxModulesTemp);
+
+    setIsLoading(false);
   }
 
   return (
@@ -90,37 +95,43 @@ function GradeModal({ data, setShowModal }) {
       subTitle={`${data.id}`}
       setShowModal={setShowModal}
     >
-      <div className={style.progressContainer}>
-        <span>Your Progress: {displayProgress}%</span>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <div className={style.progressContainer}>
+            <span>Your Progress: {displayProgress}%</span>
 
-        <ProgressBar progress={gradeProgress} />
-      </div>
+            <ProgressBar progress={gradeProgress} />
+          </div>
 
-      <div className={style.ulContainer}>
-        <ul className={style.ul}>
-          <li className={style.liHeader}>
-            <div className={style.module}>
-              <span>Minted</span>
+          <div className={style.ulContainer}>
+            <ul className={style.ul}>
+              <li className={style.liHeader}>
+                <div className={style.module}>
+                  <span>Minted</span>
 
-              <span>Grade ID</span>
+                  <span>Grade ID</span>
 
-              <span>Module</span>
+                  <span>Module</span>
 
-              <span>Grade</span>
-            </div>
+                  <span>Grade</span>
+                </div>
 
-            <div className={style.buttons}>
-              <button type="button" onClick={handleOnRefresh}>
-                Refresh
-              </button>
-            </div>
-          </li>
+                <div className={style.buttons}>
+                  <button type="button" onClick={handleOnRefresh}>
+                    Refresh
+                  </button>
+                </div>
+              </li>
 
-          {grades.map((grade, index) => (
-            <GradeItem grade={grade} key={index} style={style} />
-          ))}
-        </ul>
-      </div>
+              {grades.map((grade, index) => (
+                <GradeItem grade={grade} key={index} style={style} />
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
     </Modal>
   );
 }
